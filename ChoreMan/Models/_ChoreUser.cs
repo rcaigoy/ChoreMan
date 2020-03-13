@@ -9,38 +9,30 @@ using Nelibur.ObjectMapper;
 
 namespace ChoreMan.Models
 {
-    public class _User
+    public class _ChoreUser
     {
         public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
+        public int ChoreListId { get; set; }
         public string Phone { get; set; }
+        public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
-        public int NumberOfLoginAttempts { get; set; }
-        public int AccountTypeId { get; set; }
 
-        public List<_ChoreList> ChoreLists { get; set; }
+        public _ChoreUser() { }
 
-        public _User() { }
-
-        public _User(User Value)
+        public _ChoreUser(ChoreUser Value)
         {
             try
             {
-                TinyMapper.Bind<User, _User>(config =>
-                {
-                    config.Bind(x => x.ChoreLists, y => y.ChoreLists);
-                });
-                TinyMapper.Map<User, _User>(Value, this);
+                TinyMapper.Bind<ChoreUser, _ChoreUser>();
+                TinyMapper.Map<ChoreUser, _ChoreUser>(Value, this);
             }
             catch (Exception ex)
             {
                 throw Utility.ThrowException(ex);
             }
         }
-
     }
 }

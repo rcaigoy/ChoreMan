@@ -42,6 +42,7 @@
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="IsVerified" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="RotationIntervals">
           <Key>
@@ -52,6 +53,7 @@
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="IntervalTypeId" Type="int" Nullable="false" />
           <Property Name="IntervalNumber" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -216,6 +218,7 @@
           <Property Name="IntervalTypeId" Type="Int32" Nullable="false" />
           <Property Name="IntervalNumber" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_RotationIntervals_ChoreLists" FromRole="RotationInterval" ToRole="ChoreList" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -330,6 +333,7 @@
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsVerified" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_ChoreUsers_ChoreLists" FromRole="ChoreUser" ToRole="ChoreList" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_ChoreUsers_ChoreLists">
           <End Type="ChoremanModel.ChoreList" Role="ChoreList" Multiplicity="1" />
@@ -393,6 +397,7 @@
           <EntitySetMapping Name="RotationIntervals">
             <EntityTypeMapping TypeName="ChoremanModel.RotationInterval">
               <MappingFragment StoreEntitySet="RotationIntervals">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ChoreListId" ColumnName="ChoreListId" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
@@ -425,6 +430,7 @@
           <EntitySetMapping Name="ChoreUsers">
             <EntityTypeMapping TypeName="ChoremanModel.ChoreUser">
               <MappingFragment StoreEntitySet="ChoreUsers">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />

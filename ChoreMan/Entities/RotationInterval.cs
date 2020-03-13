@@ -19,6 +19,7 @@ namespace ChoreMan.Entities
         public System.DateTime StartDate { get; set; }
         public int IntervalTypeId { get; set; }
         public int IntervalNumber { get; set; }
+        public bool IsActive { get; set; }
     
         public virtual ChoreList ChoreList { get; set; }
     }
