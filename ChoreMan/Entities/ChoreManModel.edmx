@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ChoremanModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ChoreLists">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ChoreListTypeId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChoreListTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChoreListType" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Chores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChoreListId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChoreUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChoreListId" Type="int" Nullable="false" />
+          <Property Name="Phone" Type="nchar" MaxLength="10" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsVerified" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RotationIntervals">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChoreListId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="IntervalTypeId" Type="int" Nullable="false" />
+          <Property Name="IntervalNumber" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="PasswordHash" Type="binary" MaxLength="64" Nullable="false" />
+          <Property Name="Salt" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsVerified" Type="bit" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="NumberOfLoginAttempts" Type="int" Nullable="false" />
+          <Property Name="AccountTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ChoreLists_ChoreListTypes">
+          <End Role="ChoreListTypes" Type="Self.ChoreListTypes" Multiplicity="1" />
+          <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreListTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChoreLists">
+              <PropertyRef Name="ChoreListTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChoreLists_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChoreLists">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chores_ChoreLists">
+          <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="1" />
+          <End Role="Chores" Type="Self.Chores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreLists">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chores">
+              <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChoreUsers_ChoreLists">
+          <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="1" />
+          <End Role="ChoreUsers" Type="Self.ChoreUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreLists">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChoreUsers">
+              <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RotationIntervals_ChoreLists">
+          <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="1" />
+          <End Role="RotationIntervals" Type="Self.RotationIntervals" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreLists">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RotationIntervals">
+              <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Authenticate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pUsername" Type="nvarchar" Mode="In" />
+          <Parameter Name="pPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="responseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="dbo_AddUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="dbo.AddUser">
+          <Parameter Name="pUsername" Type="nvarchar" Mode="In" />
+          <Parameter Name="pEmail" Type="nvarchar" Mode="In" />
+          <Parameter Name="pPhone" Type="nchar" Mode="In" />
+          <Parameter Name="pFirstName" Type="nvarchar" Mode="In" />
+          <Parameter Name="pLastName" Type="nvarchar" Mode="In" />
+          <Parameter Name="pPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="responseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="UpdatePassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pUsername" Type="nvarchar" Mode="In" />
+          <Parameter Name="pPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="responseMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="ChoremanModelStoreContainer">
+          <EntitySet Name="ChoreLists" EntityType="Self.ChoreLists" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChoreListTypes" EntityType="Self.ChoreListTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChoreUsers" EntityType="Self.ChoreUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RotationIntervals" EntityType="Self.RotationIntervals" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ChoreLists_ChoreListTypes" Association="Self.FK_ChoreLists_ChoreListTypes">
+            <End Role="ChoreListTypes" EntitySet="ChoreListTypes" />
+            <End Role="ChoreLists" EntitySet="ChoreLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChoreLists_Users" Association="Self.FK_ChoreLists_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ChoreLists" EntitySet="ChoreLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Chores_ChoreLists" Association="Self.FK_Chores_ChoreLists">
+            <End Role="ChoreLists" EntitySet="ChoreLists" />
+            <End Role="Chores" EntitySet="Chores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChoreUsers_ChoreLists" Association="Self.FK_ChoreUsers_ChoreLists">
+            <End Role="ChoreLists" EntitySet="ChoreLists" />
+            <End Role="ChoreUsers" EntitySet="ChoreUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RotationIntervals_ChoreLists" Association="Self.FK_RotationIntervals_ChoreLists">
+            <End Role="ChoreLists" EntitySet="ChoreLists" />
+            <End Role="RotationIntervals" EntitySet="RotationIntervals" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ChoremanModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ChoreList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="ChoremanModel.FK_ChoreLists_Users" FromRole="ChoreList" ToRole="User" />
+          <NavigationProperty Name="Chores" Relationship="ChoremanModel.FK_Chores_ChoreLists" FromRole="ChoreList" ToRole="Chore" />
+          <NavigationProperty Name="RotationIntervals" Relationship="ChoremanModel.FK_RotationIntervals_ChoreLists" FromRole="ChoreList" ToRole="RotationInterval" />
+          <NavigationProperty Name="ChoreUsers" Relationship="ChoremanModel.FK_ChoreUsers_ChoreLists" FromRole="ChoreList" ToRole="ChoreUser" />
+          <Property Name="ChoreListTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ChoreListType" Relationship="ChoremanModel.FK_ChoreLists_ChoreListTypes" FromRole="ChoreList" ToRole="ChoreListType" />
+        </EntityType>
+        <EntityType Name="Chore">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChoreListId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_Chores_ChoreLists" FromRole="Chore" ToRole="ChoreList" />
+        </EntityType>
+        <EntityType Name="RotationInterval">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChoreListId" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IntervalTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IntervalNumber" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_RotationIntervals_ChoreLists" FromRole="RotationInterval" ToRole="ChoreList" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="Binary" MaxLength="64" FixedLength="true" Nullable="false" />
+          <Property Name="Salt" Type="Guid" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsVerified" Type="Boolean" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="NumberOfLoginAttempts" Type="Int32" Nullable="false" />
+          <Property Name="AccountTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ChoreLists" Relationship="ChoremanModel.FK_ChoreLists_Users" FromRole="User" ToRole="ChoreList" />
+        </EntityType>
+        <EntityContainer Name="ChoremanEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ChoreLists" EntityType="Self.ChoreList" />
+          <EntitySet Name="Chores" EntityType="Self.Chore" />
+          <EntitySet Name="RotationIntervals" EntityType="Self.RotationInterval" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <FunctionImport Name="Authenticate">
+            <Parameter Name="pUsername" Mode="In" Type="String" />
+            <Parameter Name="pPassword" Mode="In" Type="String" />
+            <Parameter Name="responseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="dbo_AddUser">
+            <Parameter Name="pUsername" Mode="In" Type="String" />
+            <Parameter Name="pEmail" Mode="In" Type="String" />
+            <Parameter Name="pPhone" Mode="In" Type="String" />
+            <Parameter Name="pFirstName" Mode="In" Type="String" />
+            <Parameter Name="pLastName" Mode="In" Type="String" />
+            <Parameter Name="pPassword" Mode="In" Type="String" />
+            <Parameter Name="responseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdatePassword">
+            <Parameter Name="pUsername" Mode="In" Type="String" />
+            <Parameter Name="pPassword" Mode="In" Type="String" />
+            <Parameter Name="responseMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <AssociationSet Name="FK_ChoreLists_Users" Association="ChoremanModel.FK_ChoreLists_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChoreList" EntitySet="ChoreLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Chores_ChoreLists" Association="ChoremanModel.FK_Chores_ChoreLists">
+            <End Role="ChoreList" EntitySet="ChoreLists" />
+            <End Role="Chore" EntitySet="Chores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RotationIntervals_ChoreLists" Association="ChoremanModel.FK_RotationIntervals_ChoreLists">
+            <End Role="ChoreList" EntitySet="ChoreLists" />
+            <End Role="RotationInterval" EntitySet="RotationIntervals" />
+          </AssociationSet>
+          <EntitySet Name="ChoreUsers" EntityType="ChoremanModel.ChoreUser" />
+          <AssociationSet Name="FK_ChoreUsers_ChoreLists" Association="ChoremanModel.FK_ChoreUsers_ChoreLists">
+            <End Role="ChoreList" EntitySet="ChoreLists" />
+            <End Role="ChoreUser" EntitySet="ChoreUsers" />
+          </AssociationSet>
+          <EntitySet Name="ChoreListTypes" EntityType="ChoremanModel.ChoreListType" />
+          <AssociationSet Name="FK_ChoreLists_ChoreListTypes" Association="ChoremanModel.FK_ChoreLists_ChoreListTypes">
+            <End Role="ChoreListType" EntitySet="ChoreListTypes" />
+            <End Role="ChoreList" EntitySet="ChoreLists" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_ChoreLists_Users">
+          <End Type="ChoremanModel.User" Role="User" Multiplicity="1" />
+          <End Type="ChoremanModel.ChoreList" Role="ChoreList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChoreList">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chores_ChoreLists">
+          <End Type="ChoremanModel.ChoreList" Role="ChoreList" Multiplicity="1" />
+          <End Type="ChoremanModel.Chore" Role="Chore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chore">
+              <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RotationIntervals_ChoreLists">
+          <End Type="ChoremanModel.ChoreList" Role="ChoreList" Multiplicity="1" />
+          <End Type="ChoremanModel.RotationInterval" Role="RotationInterval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RotationInterval">
+              <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChoreUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChoreListId" Type="Int32" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsVerified" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_ChoreUsers_ChoreLists" FromRole="ChoreUser" ToRole="ChoreList" />
+        </EntityType>
+        <Association Name="FK_ChoreUsers_ChoreLists">
+          <End Type="ChoremanModel.ChoreList" Role="ChoreList" Multiplicity="1" />
+          <End Type="ChoremanModel.ChoreUser" Role="ChoreUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChoreUser">
+              <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChoreListType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChoreListType1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ChoreLists" Relationship="ChoremanModel.FK_ChoreLists_ChoreListTypes" FromRole="ChoreListType" ToRole="ChoreList" />
+        </EntityType>
+        <Association Name="FK_ChoreLists_ChoreListTypes">
+          <End Type="ChoremanModel.ChoreListType" Role="ChoreListType" Multiplicity="1" />
+          <End Type="ChoremanModel.ChoreList" Role="ChoreList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreListType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChoreList">
+              <PropertyRef Name="ChoreListTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ChoremanModelStoreContainer" CdmEntityContainer="ChoremanEntities">
+          <EntitySetMapping Name="ChoreLists">
+            <EntityTypeMapping TypeName="ChoremanModel.ChoreList">
+              <MappingFragment StoreEntitySet="ChoreLists">
+                <ScalarProperty Name="ChoreListTypeId" ColumnName="ChoreListTypeId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Chores">
+            <EntityTypeMapping TypeName="ChoremanModel.Chore">
+              <MappingFragment StoreEntitySet="Chores">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ChoreListId" ColumnName="ChoreListId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RotationIntervals">
+            <EntityTypeMapping TypeName="ChoremanModel.RotationInterval">
+              <MappingFragment StoreEntitySet="RotationIntervals">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ChoreListId" ColumnName="ChoreListId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="IntervalTypeId" ColumnName="IntervalTypeId" />
+                <ScalarProperty Name="IntervalNumber" ColumnName="IntervalNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ChoremanModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="NumberOfLoginAttempts" ColumnName="NumberOfLoginAttempts" />
+                <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Authenticate" FunctionName="ChoremanModel.Store.Authenticate" />
+          <FunctionImportMapping FunctionImportName="dbo_AddUser" FunctionName="ChoremanModel.Store.dbo_AddUser" />
+          <FunctionImportMapping FunctionImportName="UpdatePassword" FunctionName="ChoremanModel.Store.UpdatePassword" />
+          <EntitySetMapping Name="ChoreUsers">
+            <EntityTypeMapping TypeName="ChoremanModel.ChoreUser">
+              <MappingFragment StoreEntitySet="ChoreUsers">
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="ChoreListId" ColumnName="ChoreListId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChoreListTypes">
+            <EntityTypeMapping TypeName="ChoremanModel.ChoreListType">
+              <MappingFragment StoreEntitySet="ChoreListTypes">
+                <ScalarProperty Name="ChoreListType1" ColumnName="ChoreListType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

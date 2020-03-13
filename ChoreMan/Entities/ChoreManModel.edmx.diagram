@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="23c8ac08c27f40d8a05914d33f09ed2c" Name="Diagram1">
+        <EntityTypeShape EntityType="ChoremanModel.ChoreList" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.Chore" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.RotationInterval" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.User" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="ChoremanModel.FK_ChoreLists_Users" />
+        <AssociationConnector Association="ChoremanModel.FK_Chores_ChoreLists" />
+        <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_ChoreLists" />
+        <EntityTypeShape EntityType="ChoremanModel.ChoreUser" Width="1.5" PointX="5" PointY="4" />
+        <AssociationConnector Association="ChoremanModel.FK_ChoreUsers_ChoreLists" />
+        <EntityTypeShape EntityType="ChoremanModel.ChoreListType" Width="1.5" PointX="0.75" PointY="8.375" />
+        <AssociationConnector Association="ChoremanModel.FK_ChoreLists_ChoreListTypes" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
