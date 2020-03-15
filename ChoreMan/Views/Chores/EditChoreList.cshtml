@@ -5,6 +5,9 @@
 
 <h2>Chore:  @ViewBag.ChoreList.Name</h2>
 
+<div id="SaveForm">
+<button>Save</button>
+</div>
 <div id="ChoreListForm">
     <label>ChoreListType</label>
     <select id="ChoreListTypeId">
@@ -14,32 +17,24 @@
     </select>
     <br />
 
-    <button>Save</button>
-
     <br />
 
     <div id="ChoreUsersList">
+        <h2>Users</h2>
+        <br />
+
+        <br />
+
         <table id="ChoreUsersTable">
             @foreach (var ChoreUser in ViewBag.ChoreList.ChoreUsers)
             {
                 <tr>
                     <td>
-                        <label>First name</label>
-                        <input type="text" value="@ChoreUser.FirstName" />
-                    </td>
-                    
-                    <td>
-                        <label>Last Name</label> 
-                        <input type="text" value="@ChoreUser.LastName" />
-                    </td>
-                    
-                    <td>
-                        <label>Phone Number</label>
-                        <input type="tel" value="@ChoreUser.Phone" />
+                        <label>@ChoreUser.FirstName @ChoreUser.LastName</label>
                     </td>
 
-                                        <td>
-                        <button>Remove User</button>
+                    <td>
+                        <label>@ChoreUser.Phone</label>
                     </td>
 
                     <td>
@@ -52,92 +47,71 @@
                             <label>Not Verified</label>
                         }
                     </td>
+
+                    <td>
+                        <button>Edit User</button>
+                    </td>
+
+                    <td>
+                        <button>Remove User</button>
+                    </td>
                 </tr>
             }
-            <tr id="AddUserRow">
-                <td>
-                    <label>First name</label>
-                    <input type="text" id="FirstName" />
-                </td>
-                    
-                <td>
-                    <label>Last Name</label> 
-                    <input type="text" id="LastName" />
-                </td>
-                    
-                <td>
-                    <label>Phone Number</label>
-                    <input type="tel" id="Phone" />
-                </td>
-
-                <td>
-                    <button id="AddUser">Add User</button>
-                </td>
-            </tr>
         </table>
+        <br />
+        <button>Add User</button>
     </div>
     <br />
 
     <br />
 
     <div id="ChoresList">
+        <h2>Chores</h2>
+        <br />
+
         <table id="ChoresTable">
-            @foreach(var Chore in ViewBag.ChoreList.Chores)
+            @foreach (var Chore in ViewBag.ChoreList.Chores)
             {
-            <tr>
-                <td>
-                    <label>Name</label>
-                    <input type="text" value="@Chore.Name" />
-                </td>
+                <tr>
+                    <td>
+                        <label>@Chore.Name</label>
+                    </td>
 
-                <td>
-                    <label>Description</label>
-                    <textarea>@Chore.Description</textarea>
-                </td>
+                    <td>
+                        <button>Edit Chore</button>
+                    </td>
 
-                <td>
-                    <button>Remove Chore</button>
-                </td>
-            </tr>
+                    <td>
+                        <button>Remove Chore</button>
+                    </td>
+                </tr>
             }
-
-            <tr>
-                <td>
-                    <label>Name</label>
-                    <input type="text" id="ChoreName" name="ChoreName" />
-                </td>
-
-                <td>
-                    <label>Description</label>
-                    <textarea id="ChoreDescription" name="ChoreDescription"></textarea>
-                </td>
-
-                <td>
-                    <button>Add Chore</button>
-                </td>
-            </tr>
         </table>
+        <br />
+        <button>Add Chore</button>
     </div>
     <br />
 
     <br />
 
     <div id="RotationIntervalsList">
+        <h2>Scheduled Rotations</h2>
+        <br />
+
         <table id="RotationIntervalsTable">
             @foreach (var RotationInterval in ViewBag.ChoreList.RotationIntervals)
             {
                 <tr>
                     <td>
-                        <label>Start Date</label>
-                        <input type="text" value="@RotationInterval.StartDate" />
+                        <label>Start Date:  @RotationInterval.StartDate</label>
                     </td>
 
                     <td>
-                        <label>Send every</label>
-                        <input type="number" value="@RotationInterval.Number"
+                        <label>Send every:  @RotationInterval.Number</label>
                     </td>
 
                     <td>
+                        <label>@RotationInterval.IntervalTypeName</label>
                         <select>
                             <option value="1">Days</option>
                             <option value="2">Business Days</option>
@@ -149,39 +123,50 @@
                     </td>
                 </tr>
             }
-            <tr>
-                <td>
-                    <label>Start Date</label>
-                    <input type="text" />
-                </td>
-
-                <td>
-                    <label>Send Every</label>
-                    <input type="number" />
-                </td>
-
-                <td>
-                    <select>
-                        <option value="1">Days</option>
-                        <option value="2">Business Days</option>
-                    </select>
-                </td>
-            </tr>
         </table>
+
+        <button>Add Schedule Rotation</button>
     </div>
     <br />
 
 </div>
 
 
+<div id="AddUserPopup">
+
+</div>
+
+<div id="AddChorePopup">
+
+</div>
+
+<div id="AddRotationPopup">
+    <label>Start Date</label>
+    <input type="text" />
+    <br />
+
+    <label>IntervalType</label>
+    <select>
+        <option value=""></option>
+    </select>
+    <br />
+
+    public bool IsActive { get; set; }
+    <label>Active</label>
+    <input type="checkbox" />
+</div>
+
 @section scripts {
-<script>
-    $(document).ready(function () {
-        $('#AddUser').on('click', function () {
 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>
 
-        });//end $('#AddUser').on('click', function () {
+    <script>
+        $(document).ready(function () {
 
-    });//end $(document).ready(function () {
-</script>    
+            $('#AddUser').on('click', function () {
+
+            });//end $('#AddUser').on('click', function () {
+
+        });//end $(document).ready(function () {
+    </script>
 }

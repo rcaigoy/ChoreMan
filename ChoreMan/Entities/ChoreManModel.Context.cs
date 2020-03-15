@@ -34,6 +34,7 @@ namespace ChoreMan.Entities
         public virtual DbSet<ChoreUser> ChoreUsers { get; set; }
         public virtual DbSet<ChoreListType> ChoreListTypes { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
+        public virtual DbSet<IntervalType> IntervalTypes { get; set; }
     
         public virtual int Authenticate(string pUsername, string pPassword, ObjectParameter responseMessage)
         {

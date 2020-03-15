@@ -18,6 +18,9 @@
         <AssociationConnector Association="ChoremanModel.FK_ChoreLists_ChoreListTypes" />
         <EntityTypeShape EntityType="ChoremanModel.Session" Width="1.5" PointX="5.375" PointY="7.5" />
         <AssociationConnector Association="ChoremanModel.FK_Session_Users" />
+        <EntityTypeShape EntityType="ChoremanModel.IntervalType" Width="1.5" PointX="3.375" PointY="8.25" />
+        <AssociationConnector Association="ChoremanModel.FK_IntervalType_RotationIntervals" />
+        <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_IntervalType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

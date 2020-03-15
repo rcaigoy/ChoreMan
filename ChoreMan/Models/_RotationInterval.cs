@@ -18,6 +18,9 @@ namespace ChoreMan.Models
         public int IntervalNumber { get; set; }
         public bool IsActive { get; set; }
 
+        //added
+        public string IntervalTypeName { get; set; }
+
         public _RotationInterval(){}
 
         public _RotationInterval(RotationInterval Value)
@@ -26,6 +29,8 @@ namespace ChoreMan.Models
             {
                 TinyMapper.Bind<RotationInterval, _RotationInterval>();
                 TinyMapper.Map<RotationInterval, _RotationInterval>(Value, this);
+
+                this.IntervalTypeName = Value.IntervalType.IntervalType1;
             }
             catch (Exception ex)
             {

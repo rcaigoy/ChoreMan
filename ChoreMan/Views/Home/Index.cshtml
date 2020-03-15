@@ -5,11 +5,33 @@
 
 @if(ViewBag.Username != null)
 {
-    <div>Hello @ViewBag.User.Username</div>
+    <div>Hello @ViewBag.User.FirstName</div>
 }
 
 <div>
+    <h2>Chore Lists</h2>
+    <br />
 
+    <table>
+        <tr>
+            <th>Chore List</th>
+            <th></th>
+        </tr>
+        @foreach(var ChoreList in ViewBag.User.ChoreLists)
+        {
+            <tr>
+                <td><a href="@Url.Action("EditChoreList", "Chores")?Id=@ChoreList.Id">@ChoreList.Name</a></td>
+                @if(ChoreList.IsActive)
+                {
+                    <td>Active</td>
+                }
+                else
+                {
+                    <td>Not Active</td>
+                }
+            </tr>
+        }
+    </table>
 </div>
 
 

@@ -29,7 +29,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ChoreListId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ChoreUsers">
@@ -44,6 +44,13 @@
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="IsVerified" Type="bit" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IntervalType">
+          <Key>
+            <PropertyRef Name="IntervalTypeId" />
+          </Key>
+          <Property Name="IntervalTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IntervalType" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="RotationIntervals">
           <Key>
@@ -131,15 +138,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RotationIntervals_ChoreLists">
-          <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="1" />
+        <Association Name="FK_RotationIntervals_IntervalType">
+          <End Role="IntervalType" Type="Self.IntervalType" Multiplicity="1" />
           <End Role="RotationIntervals" Type="Self.RotationIntervals" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="ChoreLists">
-              <PropertyRef Name="Id" />
+            <Principal Role="IntervalType">
+              <PropertyRef Name="IntervalTypeId" />
             </Principal>
             <Dependent Role="RotationIntervals">
-              <PropertyRef Name="ChoreListId" />
+              <PropertyRef Name="IntervalTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -179,6 +186,7 @@
           <EntitySet Name="ChoreListTypes" EntityType="Self.ChoreListTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChoreUsers" EntityType="Self.ChoreUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IntervalType" EntityType="Self.IntervalType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RotationIntervals" EntityType="Self.RotationIntervals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Session" EntityType="Self.Session" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -198,8 +206,8 @@
             <End Role="ChoreLists" EntitySet="ChoreLists" />
             <End Role="ChoreUsers" EntitySet="ChoreUsers" />
           </AssociationSet>
-          <AssociationSet Name="FK_RotationIntervals_ChoreLists" Association="Self.FK_RotationIntervals_ChoreLists">
-            <End Role="ChoreLists" EntitySet="ChoreLists" />
+          <AssociationSet Name="FK_RotationIntervals_IntervalType" Association="Self.FK_RotationIntervals_IntervalType">
+            <End Role="IntervalType" EntitySet="IntervalType" />
             <End Role="RotationIntervals" EntitySet="RotationIntervals" />
           </AssociationSet>
           <AssociationSet Name="FK_Session_Users" Association="Self.FK_Session_Users">
@@ -233,7 +241,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ChoreListId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_Chores_ChoreLists" FromRole="Chore" ToRole="ChoreList" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
@@ -248,6 +256,7 @@
           <Property Name="IntervalNumber" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_RotationIntervals_ChoreLists" FromRole="RotationInterval" ToRole="ChoreList" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="IntervalType" Relationship="ChoremanModel.FK_IntervalType_RotationIntervals" FromRole="RotationInterval" ToRole="IntervalType" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -318,6 +327,15 @@
           <AssociationSet Name="FK_Session_Users" Association="ChoremanModel.FK_Session_Users">
             <End Role="User" EntitySet="Users" />
             <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <EntitySet Name="IntervalTypes" EntityType="ChoremanModel.IntervalType" />
+          <AssociationSet Name="FK_IntervalType_RotationIntervals" Association="ChoremanModel.FK_IntervalType_RotationIntervals">
+            <End Role="RotationInterval" EntitySet="RotationIntervals" />
+            <End Role="IntervalType" EntitySet="IntervalTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RotationIntervals_IntervalType" Association="ChoremanModel.FK_RotationIntervals_IntervalType">
+            <End Role="IntervalType" EntitySet="IntervalTypes" />
+            <End Role="RotationInterval" EntitySet="RotationIntervals" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ChoreLists_Users">
@@ -425,6 +443,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="IntervalType">
+          <Key>
+            <PropertyRef Name="IntervalTypeId" />
+          </Key>
+          <Property Name="IntervalTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IntervalType1" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RotationInterval" Relationship="ChoremanModel.FK_IntervalType_RotationIntervals" FromRole="IntervalType" ToRole="RotationInterval" />
+          <NavigationProperty Name="RotationIntervals" Relationship="ChoremanModel.FK_RotationIntervals_IntervalType" FromRole="IntervalType" ToRole="RotationInterval" />
+        </EntityType>
+        <Association Name="FK_IntervalType_RotationIntervals">
+          <End Type="ChoremanModel.RotationInterval" Role="RotationInterval" Multiplicity="1" />
+          <End Type="ChoremanModel.IntervalType" Role="IntervalType" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="RotationInterval">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IntervalType">
+              <PropertyRef Name="IntervalTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RotationIntervals_IntervalType">
+          <End Type="ChoremanModel.IntervalType" Role="IntervalType" Multiplicity="1" />
+          <End Type="ChoremanModel.RotationInterval" Role="RotationInterval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IntervalType">
+              <PropertyRef Name="IntervalTypeId" />
+            </Principal>
+            <Dependent Role="RotationInterval">
+              <PropertyRef Name="IntervalTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -516,6 +567,14 @@
                 <ScalarProperty Name="BearerToken" ColumnName="BearerToken" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IntervalTypes">
+            <EntityTypeMapping TypeName="ChoremanModel.IntervalType">
+              <MappingFragment StoreEntitySet="IntervalType">
+                <ScalarProperty Name="IntervalType1" ColumnName="IntervalType" />
+                <ScalarProperty Name="IntervalTypeId" ColumnName="IntervalTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
