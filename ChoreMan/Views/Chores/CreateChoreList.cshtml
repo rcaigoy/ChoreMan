@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "CreateChoreList";
+}
+
+<h2>Create Chore List</h2>
+
+public int Id { get; set; }
+public string Name { get; set; }
+public int UserId { get; set; }
+public bool IsActive { get; set; }
+public int ChoreListTypeId { get; set; }
+
+<br />
+
+<div ChorelistForm>
+    <label>Name</label>
+    <input type="text" id="Name" name="Name" />
+    <br />
+
+    <label>Chore List Type</label>
+    <select id="ChoreListTypeId" name="ChoreListTypeId">
+        <option value="1">Skip</option>
+        <option value="2">Overload</option>
+    </select>
+    <br />
+
+    <button id="Create">Create Chore List</button>
+</div>
+
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $('#Create').on('click', function () {
+            let ChoreListObject = {};
+
+            ChoreListObject['Name'] = Name.value;
+            ChoreListObject['ChoreListTypeId'] = ChoreListTypeId.value;
+            ChoreListObject['UserId'] = @ViewBag.User.Id;
+
+            //ajax call
+            $.ajax({
+                url: '@Url.Action("CreateChoreList", "API")'
+                    + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                    + '&ChoreListValues=' + JSON.stringify(ChoreListObject)
+                ,
+                type: 'POST',
+                success: function (data) {
+                    window.location.href = '@Url.Action("EditChoreList", "Chores")' + '?Id=' + data.Id;
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('Error');
+                }
+            });//end $.ajax({
+        });//end $('#Create').on('click', function () {
+    });//end $(document).ready(function () {
+</script>    
+}

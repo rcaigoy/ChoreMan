@@ -16,6 +16,7 @@ namespace ChoreMan.Models
         public int UserId { get; set; }
         public bool IsActive { get; set; }
         public int ChoreListTypeId { get; set; }
+        public string ChoreListTypeName { get; set; }
 
         public List<_ChoreUser> ChoreUsers { get; set; }
         public List<_Chore> Chores { get; set; }
@@ -33,6 +34,8 @@ namespace ChoreMan.Models
             });
 
             TinyMapper.Map<ChoreList, _ChoreList>(Value, this);
+
+            this.ChoreListTypeName = Value.ChoreListType.ChoreListType1;
         }
     }
 }

@@ -22,7 +22,6 @@ using Nelibur.ObjectMapper;
 
 namespace ChoreMan.Controllers
 {
-    [Authorize]
     public class APIController : ApiController
     {
         private UserRepository UserRepository;
@@ -62,11 +61,17 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/createchorelist")]
-        public HttpResponseMessage CreateChoreList(string ChoreListValues)
+        public HttpResponseMessage CreateChoreList(string AuthToken, string ChoreListValues)
         {
             try
             {
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
                 ChoreList ChoreListObject = JsonConvert.DeserializeObject<ChoreList>(ChoreListValues);
+
+                //check if User Matches Id
+                if (User.Id != ChoreListObject.UserId)
+                    throw new Exception("Unathorized");
+
                 return OKResponse(new _ChoreList(ChoreRepository.CreateChoreList(ChoreListObject)));
             }
             catch (Exception ex)

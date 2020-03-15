@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "EditChoreList";
+}
+
+<h2>Chore:  @ViewBag.ChoreList.Name</h2>
+
+<div id="ChoreListForm">
+    <label>ChoreListType</label>
+    <select id="ChoreListTypeId">
+        <option value="@ViewBag.ChoreList.ChoreListTypeId">@ViewBag.ChoreList.ChoreListTypeName</option>
+        <option value="1">Skip</option>
+        <option value="2">Overload</option>
+    </select>
+    <br />
+
+    <button>Save</button>
+
+    <br />
+
+    <div id="ChoreUsersList">
+        <table id="ChoreUsersTable">
+            @foreach (var ChoreUser in ViewBag.ChoreList.ChoreUsers)
+            {
+                <tr>
+                    <td>
+                        <label>First name</label>
+                        <input type="text" value="@ChoreUser.FirstName" />
+                    </td>
+                    
+                    <td>
+                        <label>Last Name</label> 
+                        <input type="text" value="@ChoreUser.LastName" />
+                    </td>
+                    
+                    <td>
+                        <label>Phone Number</label>
+                        <input type="tel" value="@ChoreUser.Phone" />
+                    </td>
+
+                                        <td>
+                        <button>Remove User</button>
+                    </td>
+
+                    <td>
+                        @if (ChoreUser.IsVerified)
+                        {
+                            <label>Verified</label>
+                        }
+                        else
+                        {
+                            <label>Not Verified</label>
+                        }
+                    </td>
+                </tr>
+            }
+            <tr id="AddUserRow">
+                <td>
+                    <label>First name</label>
+                    <input type="text" id="FirstName" />
+                </td>
+                    
+                <td>
+                    <label>Last Name</label> 
+                    <input type="text" id="LastName" />
+                </td>
+                    
+                <td>
+                    <label>Phone Number</label>
+                    <input type="tel" id="Phone" />
+                </td>
+
+                <td>
+                    <button id="AddUser">Add User</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+
+    <br />
+
+    <div id="ChoresList">
+        <table id="ChoresTable">
+            @foreach(var Chore in ViewBag.ChoreList.Chores)
+            {
+            <tr>
+                <td>
+                    <label>Name</label>
+                    <input type="text" value="@Chore.Name" />
+                </td>
+
+                <td>
+                    <label>Description</label>
+                    <textarea>@Chore.Description</textarea>
+                </td>
+
+                <td>
+                    <button>Remove Chore</button>
+                </td>
+            </tr>
+            }
+
+            <tr>
+                <td>
+                    <label>Name</label>
+                    <input type="text" id="ChoreName" name="ChoreName" />
+                </td>
+
+                <td>
+                    <label>Description</label>
+                    <textarea id="ChoreDescription" name="ChoreDescription"></textarea>
+                </td>
+
+                <td>
+                    <button>Add Chore</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+
+    <br />
+
+    <div id="RotationIntervalsList">
+        <table id="RotationIntervalsTable">
+            @foreach (var RotationInterval in ViewBag.ChoreList.RotationIntervals)
+            {
+                <tr>
+                    <td>
+                        <label>Start Date</label>
+                        <input type="text" value="@RotationInterval.StartDate" />
+                    </td>
+
+                    <td>
+                        <label>Send every</label>
+                        <input type="number" value="@RotationInterval.Number"
+                    </td>
+
+                    <td>
+                        <label>Interval Type</label>
+                        <select>
+                            <option value="1">Days</option>
+                            <option value="2">Business Days</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <button>Remove</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <br />
+
+</div>
+
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $('#AddUser').on('click', function () {
+
+
+        });//end $('#AddUser').on('click', function () {
+
+    });//end $(document).ready(function () {
+</script>    
+}

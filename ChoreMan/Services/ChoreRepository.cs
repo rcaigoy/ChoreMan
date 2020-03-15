@@ -433,5 +433,20 @@ namespace ChoreMan.Services
         }
 
         #endregion RotationIntervals
+
+
+        //global Chore Methods
+
+        public bool CanEditChoreList(int UserId, int ChoreListId)
+        {
+            try
+            {
+                return db.ChoreLists.Count(x => x.Id == ChoreListId && x.UserId == UserId) > 0;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
     }
 }
