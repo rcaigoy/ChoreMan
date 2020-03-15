@@ -195,6 +195,7 @@ namespace ChoreMan.Services
         }
 
 
+        //update (verify)
         public ChoreUser VerifyChoreUser(string Phone)
         {
             try
@@ -229,6 +230,111 @@ namespace ChoreMan.Services
         }
 
         #endregion ChoreUsers
+
+
+        #region CHORES
+
+        //Create
+        public Chore AddChore(Chore Value)
+        {
+            try
+            {
+                Value = db.Chores.Add(Value);
+                db.SaveChanges();
+                return Value;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        //Read single
+        public Chore GetChore(int Id)
+        {
+            try
+            {
+                return db.Chores.SingleOrDefault(x => x.Id == Id);
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        //Read List
+        public List<Chore> GetChores(int ChoreListId)
+        {
+            try
+            {
+                return db.Chores.Where(x => x.ChoreListId == ChoreListId).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        //Update
+        public Chore UpdateChore(int Id, Chore NewChore)
+        {
+            try
+            {
+                var OldChore = db.Chores.SingleOrDefault(x => x.Id == Id);
+
+                //iterate through all properties
+                //except Id
+                foreach (var property in NewChore
+                                            .GetType()
+                                            .GetProperties()
+                                            .Where(x => x.Name != "Id"))
+                {
+                    //get the value of the iterated property
+                    var value = property.GetValue(NewChore);
+
+                    if (value != null)
+                    {
+                        Type type = NewChore.GetType();
+                        PropertyInfo propertyInfo = type.GetProperty(property.Name);
+                        propertyInfo.SetValue(OldChore, value, null);
+                    }
+                }
+
+                db.SaveChanges();
+
+                return OldChore;
+
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        //Delete
+        public Chore DeleteChore(int Id)
+        {
+            try
+            {
+                var Chore = db.Chores.SingleOrDefault(x => x.Id == Id);
+                Chore.IsActive = false;
+                db.SaveChanges();
+
+                return Chore;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+            
+
+
+        #endregion CHORES
 
 
         #region RotationIntervals

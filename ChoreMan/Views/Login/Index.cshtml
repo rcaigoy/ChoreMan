@@ -3,5 +3,21 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Login</h2>
+
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        if (!document.cookie){
+            alert('not set');
+            document.cookie = "Username=user2;";
+        }
+        else {
+            alert(document.cookie);
+            //document.cookie = null;
+        }
+    });//end $(document).ready(function () {
+</script>    
+}
 

@@ -30,6 +30,7 @@
           <Property Name="ChoreListId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="ChoreUsers">
           <Key>
@@ -54,6 +55,16 @@
           <Property Name="IntervalTypeId" Type="int" Nullable="false" />
           <Property Name="IntervalNumber" Type="int" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="BearerToken" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RefreshToken" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ExpirationDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -132,6 +143,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Session_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="Authenticate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pUsername" Type="nvarchar" Mode="In" />
           <Parameter Name="pPassword" Type="nvarchar" Mode="In" />
@@ -157,6 +180,7 @@
           <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChoreUsers" EntityType="Self.ChoreUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RotationIntervals" EntityType="Self.RotationIntervals" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Session" EntityType="Self.Session" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ChoreLists_ChoreListTypes" Association="Self.FK_ChoreLists_ChoreListTypes">
             <End Role="ChoreListTypes" EntitySet="ChoreListTypes" />
@@ -177,6 +201,10 @@
           <AssociationSet Name="FK_RotationIntervals_ChoreLists" Association="Self.FK_RotationIntervals_ChoreLists">
             <End Role="ChoreLists" EntitySet="ChoreLists" />
             <End Role="RotationIntervals" EntitySet="RotationIntervals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Session_Users" Association="Self.FK_Session_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Session" EntitySet="Session" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -207,6 +235,7 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_Chores_ChoreLists" FromRole="Chore" ToRole="ChoreList" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="RotationInterval">
           <Key>
@@ -237,6 +266,7 @@
           <Property Name="NumberOfLoginAttempts" Type="Int32" Nullable="false" />
           <Property Name="AccountTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ChoreLists" Relationship="ChoremanModel.FK_ChoreLists_Users" FromRole="User" ToRole="ChoreList" />
+          <NavigationProperty Name="Sessions" Relationship="ChoremanModel.FK_Session_Users" FromRole="User" ToRole="Session" />
         </EntityType>
         <EntityContainer Name="ChoremanEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ChoreLists" EntityType="Self.ChoreList" />
@@ -283,6 +313,11 @@
           <AssociationSet Name="FK_ChoreLists_ChoreListTypes" Association="ChoremanModel.FK_ChoreLists_ChoreListTypes">
             <End Role="ChoreListType" EntitySet="ChoreListTypes" />
             <End Role="ChoreList" EntitySet="ChoreLists" />
+          </AssociationSet>
+          <EntitySet Name="Sessions" EntityType="ChoremanModel.Session" />
+          <AssociationSet Name="FK_Session_Users" Association="ChoremanModel.FK_Session_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Session" EntitySet="Sessions" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ChoreLists_Users">
@@ -367,6 +402,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="SessionId" />
+          </Key>
+          <Property Name="SessionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="BearerToken" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RefreshToken" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="ChoremanModel.FK_Session_Users" FromRole="Session" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Session_Users">
+          <End Type="ChoremanModel.User" Role="User" Multiplicity="1" />
+          <End Type="ChoremanModel.Session" Role="Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -387,6 +445,7 @@
           <EntitySetMapping Name="Chores">
             <EntityTypeMapping TypeName="ChoremanModel.Chore">
               <MappingFragment StoreEntitySet="Chores">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ChoreListId" ColumnName="ChoreListId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -446,6 +505,17 @@
               <MappingFragment StoreEntitySet="ChoreListTypes">
                 <ScalarProperty Name="ChoreListType1" ColumnName="ChoreListType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sessions">
+            <EntityTypeMapping TypeName="ChoremanModel.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+                <ScalarProperty Name="BearerToken" ColumnName="BearerToken" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

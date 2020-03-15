@@ -31,5 +31,6 @@ namespace ChoreMan.Models
             {
                 throw Utility.ThrowException(ex);
             }
+        }
     }
 }

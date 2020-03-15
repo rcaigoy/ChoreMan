@@ -12,14 +12,14 @@ namespace ChoreMan.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Chore
+    public partial class Session
     {
-        public int Id { get; set; }
-        public int ChoreListId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool IsActive { get; set; }
+        public int SessionId { get; set; }
+        public int UserId { get; set; }
+        public string BearerToken { get; set; }
+        public string RefreshToken { get; set; }
+        public System.DateTime ExpirationDate { get; set; }
     
-        public virtual ChoreList ChoreList { get; set; }
+        public virtual User User { get; set; }
     }
 }

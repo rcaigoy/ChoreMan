@@ -18,6 +18,7 @@ namespace ChoreMan.Entities
         public User()
         {
             this.ChoreLists = new HashSet<ChoreList>();
+            this.Sessions = new HashSet<Session>();
         }
     
         public int Id { get; set; }
@@ -35,5 +36,7 @@ namespace ChoreMan.Entities
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChoreList> ChoreLists { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Session> Sessions { get; set; }
     }
 }

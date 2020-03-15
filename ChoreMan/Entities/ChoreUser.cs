@@ -22,6 +22,7 @@ namespace ChoreMan.Entities
         public string LastName { get; set; }
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
+    
         public virtual ChoreList ChoreList { get; set; }
     }
 }
