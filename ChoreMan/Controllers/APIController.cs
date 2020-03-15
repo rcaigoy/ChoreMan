@@ -143,11 +143,20 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/addchoreuser")]
-        public HttpResponseMessage AddChoreUser(string ChoreUserValues)
+        public HttpResponseMessage AddChoreUser(string AuthToken, string ChoreUserValues)
         {
             try
             {
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
                 ChoreUser ChoreUserObject = JsonConvert.DeserializeObject<ChoreUser>(ChoreUserValues);
+
+                //get chorelist from chore user
+                var ChoreList = ChoreRepository.GetChoreList(ChoreUserObject.ChoreListId);
+
+                //check if userid matches chore list object
+                if (User.Id != ChoreList.UserId)
+                    throw new Exception("Unathorized");
+
                 return OKResponse(new _ChoreUser(ChoreRepository.AddChoreUser(ChoreUserObject)));
             }
             catch (Exception ex)

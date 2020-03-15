@@ -117,7 +117,8 @@ namespace ChoreMan.Services
                 session.ExpirationDate = DateTime.Now.AddDays(1);
 
                 //add and save to db
-                db.Sessions.Add(session);
+                if (session.SessionId == 0)
+                    db.Sessions.Add(session);
                 db.SaveChanges();
 
                 //set auth token
