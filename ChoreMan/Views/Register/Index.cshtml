@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Register";
 }
 
 <div>
@@ -23,32 +23,133 @@
         Step 3. Schedule Rotations
     </div>
 
+    <br /><br />
 
-    <div>
-        <label>Username:</label><input type="text" />
+    <h2>Already a user?</h2>
+
+    <br />
+
+    <div id="LoginForm">
+        <input type="text" id="LoginUsername" name="LoginUsername" />
         <br />
+        <input type="password" id="LoginPassword" name="LoginPassword" />
+        <button id="Login">Log In</button>
 
-        <label>Mobile Phone:</label><input type="tel" />
-        <br />
-
-        <label>First Name:</label><input type="text" />
-        <br />
-
-        <label>Last Name:</label><input type="text" />
-        <br />
-
-        <label>Email:</label><input type="text" />
-        <br />
-
-        <label>Password:</label><input type="password" />
-        <br />
-
-        <label>Confirm Password:</label><input type="password" />
-        <br />
-
-
+        <br /><br />
+        <a href="">Forgot Username or Password?</a>
 
     </div>
 
+    <br /><br />
+
+    <div id="RegisterForm">
+        <label>Username:</label>
+        <input type="text" id="Username" name="Username" />
+        <br />
+
+        <label>Mobile Phone:</label>
+        <input type="tel" id="Phone" name="Phone" />
+        <br />
+
+        <label>First Name:</label>
+        <input type="text" id="FirstName" name="FirstName" />
+        <br />
+
+        <label>Last Name:</label>
+        <input type="text" id="LastName" name="LastName" />
+        <br />
+
+        <label>Email:</label>
+        <input type="text" id="Email" name="Email" />
+        <br />
+
+        <label>Password:</label>
+        <input type="password" id="Password" name="Password" />
+        <br />
+
+        <label>Confirm Password:</label>
+        <input type="password" id="ConfirmPassword" name="ConfirmPassword" />
+        <br />
+
+        <label class="hidden" id="WrongPassword">Passwords don't match</label>
+
+        <button id="Register">Register </button>
+    </div>
 
 </div>
+
+
+@section scripts{
+<script>
+    $(document).ready(function () {
+
+        //login
+        $('#Login').on('click', function () {
+
+            $.ajax({
+                url: '@Url.Action("CreateSession", "Login")'
+                    + '?Username=' + LoginUsername.value
+                    + '&Password=' + LoginPassword.value
+                ,
+                type: 'POST',
+                success: function (data) {
+                    if (data.LoggedIn) {
+                        console.log(data);
+                        window.location.reload();
+                    }
+                    else {
+                        alert('Error:  ' + data.Message);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('Error');
+                }
+            });//end $.ajax({
+
+        });//end $('Login').on('click', function () {
+
+        //register
+        $('#Register').on('click', function () {
+
+            if (Password.value == ConfirmPassword.value) {
+                //create UserValue Object
+                let UserValueObject = {};
+
+                //get each Register Form value
+                $('#RegisterForm input').each(function (data) {
+                    //alert(data.value);
+                    UserValueObject[this.name] = this.value;
+                });//end $('#RegisterForm input').each(function () {
+
+                $.ajax({
+                    url: '@Url.Action("RegisterUser", "Register")'
+                        + '?UserValues=' + escape(JSON.stringify(UserValueObject))
+                    ,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data.LoggedIn) {
+                            console.log(data);
+                            alert('success');
+                            window.location.href = '@Url.Action("Index", "Home")';
+                        }
+                        else {
+                            alert('not logged in');
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('Error');
+                    }
+                });//end $.ajax({
+
+            }//end if (Password.value == ConfirmPassword.value) {
+            else {
+                alert('Passwords don\'t match');
+            }
+
+
+        });//end $('#Register').on('click', function () {
+    });//end $(document).ready(function () {
+</script>    
+}

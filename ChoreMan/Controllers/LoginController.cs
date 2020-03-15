@@ -30,7 +30,10 @@ namespace ChoreMan.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            return View();
+            if (Session["User"] == null)
+                return View();
+
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult CreateSession(string Username, string Password)

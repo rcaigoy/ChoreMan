@@ -16,8 +16,7 @@ namespace ChoreMan.Controllers
         {
             if (Session["User"] != null)
             {
-                ViewBag.Username = ((_User)Session["User"]).FirstName;
-                ViewBag.AuthToken = ((_User)Session["User"]).AuthToken;
+                ViewBag.User = (_User)Session["User"];
 
                 return View();
             }

@@ -52,7 +52,7 @@ namespace ChoreMan.Services
             {
                 //lowercase all values;
                 Value.Username = Value.Username.ToLower();
-                Value.Email = Value.Username.ToLower();
+                Value.Email = Value.Email.ToLower();
 
                 if (VerifyUniqueUser(Value)) ;
 
@@ -68,6 +68,8 @@ namespace ChoreMan.Services
                 if (result == "Success")
                 {
                     db.SaveChanges();
+
+                    Value = db.Users.SingleOrDefault(x => x.Username == Value.Username);
 
                     //create auth token
                     Value = CreateAuthToken(Value);
@@ -101,12 +103,13 @@ namespace ChoreMan.Services
                     session = db.Sessions.Where(x => x.UserId == Value.Id).OrderBy(x => x.ExpirationDate).FirstOrDefault();
                 }
 
+                session.UserId = Value.Id;
                 
                 //check if bearertoken is empty or if current bearer token already exists.  if so, create bearer token.
                 while (string.IsNullOrEmpty(session.BearerToken) || db.Sessions.Count(x => x.BearerToken == session.BearerToken) > 0)
                 {
                     //always create new GUID
-                    session.BearerToken = new Guid().ToString();
+                    session.BearerToken = Guid.NewGuid().ToString();
                 }
                 session.RefreshToken = session.BearerToken;
 

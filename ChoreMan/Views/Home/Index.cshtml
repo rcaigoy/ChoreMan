@@ -1,30 +1,22 @@
 ﻿
-<h1>Home</h1>
+<h1>Chore Man</h1>
 
 <br />
 
 @if(ViewBag.Username != null)
 {
-    <div>Hello @ViewBag.Username</div>
+    <div>Hello @ViewBag.User.Username</div>
 }
 
 <div>
-    
+
 </div>
 
 
 @section scripts{
 <script>
     $(document).ready(function () {
-        if (!document.cookie){
-            alert('not set');
-            document.cookie = "Username = rcaigoy31;";
-        }
-        else {
-            alert(document.cookie);
-            document.cookie = "Username = rcaigoy32;"
-            //document.cookie = null;
-        }
+
     });//end $(document).ready(function () {
 </script>
 
