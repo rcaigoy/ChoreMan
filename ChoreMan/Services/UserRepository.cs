@@ -22,8 +22,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                this.db = new ChoremanEntities("ChoremanEntities2");
-                
+                this.db = new ChoremanEntities();
             }
             catch (Exception ex)
             {
@@ -69,10 +68,79 @@ namespace ChoreMan.Services
                 if (result == "Success")
                 {
                     db.SaveChanges();
+
+                    //create auth token
+                    Value = CreateAuthToken(Value);
                     return Value;
                 }
                 
                 throw new Exception(result);
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        //create auth token
+        public User CreateAuthToken(User Value)
+        {
+            try
+            {
+                Session session;
+                //check if number of sessions for this user is less than 4
+                if (db.Sessions.Count(x => x.UserId == Value.Id) < 4)
+                {
+                    //create new session token
+                    session = new Session();
+                }
+                else
+                {
+                    //write over old session if more than 4
+                    session = db.Sessions.Where(x => x.UserId == Value.Id).OrderBy(x => x.ExpirationDate).FirstOrDefault();
+                }
+
+                
+                //check if bearertoken is empty or if current bearer token already exists.  if so, create bearer token.
+                while (string.IsNullOrEmpty(session.BearerToken) || db.Sessions.Count(x => x.BearerToken == session.BearerToken) > 0)
+                {
+                    //always create new GUID
+                    session.BearerToken = new Guid().ToString();
+                }
+                session.RefreshToken = session.BearerToken;
+
+                //expire in 24 hours?
+                session.ExpirationDate = DateTime.Now.AddDays(1);
+
+                //add and save to db
+                db.Sessions.Add(session);
+                db.SaveChanges();
+
+                //set auth token
+                Value.AuthToken = session.BearerToken;
+
+                return Value;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        public User RefreshAuthToken(string AuthToken)
+        {
+            try
+            {
+                //get session
+                var session = db.Sessions.SingleOrDefault(x => x.BearerToken == AuthToken);
+
+                //update expiratin date
+                session.ExpirationDate = DateTime.Now.AddDays(1);
+                db.SaveChanges();
+
+                return session.User;
             }
             catch (Exception ex)
             {
@@ -117,7 +185,9 @@ namespace ChoreMan.Services
 
                 if (result == "Success")
                 {
-                    return db.Users.SingleOrDefault(x => x.Username == Username);
+                    User User = db.Users.SingleOrDefault(x => x.Username == Username);
+                    User = CreateAuthToken(User);
+                    return User;
                 }
 
                 throw new Exception("Incorrect Username, Email, or Password");

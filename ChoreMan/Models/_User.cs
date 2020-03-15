@@ -22,6 +22,8 @@ namespace ChoreMan.Models
         public int NumberOfLoginAttempts { get; set; }
         public int AccountTypeId { get; set; }
 
+        public string AuthToken { get; set; }
+
         public List<_ChoreList> ChoreLists { get; set; }
 
         public _User() { }

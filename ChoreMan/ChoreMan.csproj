@@ -204,6 +204,9 @@
     <Compile Include="Entities\RotationInterval.cs">
       <DependentUpon>ChoreManModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Session.cs">
+      <DependentUpon>ChoreManModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\User.cs">
       <DependentUpon>ChoreManModel.tt</DependentUpon>
     </Compile>

@@ -5,9 +5,9 @@ using System.Web;
 
 namespace ChoreMan.Entities
 {
-    public partial class ChoremanEntities2
+    public partial class ChoremanEntities
     {
-        public ChoremanEntities2(string ConnectionString) : base("name=" + ConnectionString)
+        public ChoremanEntities(string ConnectionString) : base("name=" + ConnectionString)
         {
 
         }

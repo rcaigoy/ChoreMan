@@ -31,7 +31,12 @@ namespace ChoreMan.Controllers
         // GET: Register
         public ActionResult Index()
         {
-            return View();
+            if (Session["User"] == null)
+            {
+                return View();
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult RegisterUser(string UserValues)
@@ -40,7 +45,6 @@ namespace ChoreMan.Controllers
             {
                 var UserObject = JsonConvert.DeserializeObject<User>(UserValues);
                 Session["User"] = new _User(UserRepository.CreateUser(UserObject));
-                Session["AuthToken"] = "";
                 return Json(new { LoggedIn = true });
             }
             catch (Exception ex)

@@ -17,8 +17,13 @@ namespace ChoreMan.Controllers
             if (Session["User"] != null)
             {
                 ViewBag.Username = ((_User)Session["User"]).FirstName;
+                ViewBag.AuthToken = ((_User)Session["User"]).AuthToken;
+
+                return View();
             }
-            return View();
+
+             return RedirectToAction("index", "Register");
+            
         }
 
         public ActionResult PrivacyPolicy()

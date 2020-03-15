@@ -45,5 +45,19 @@ namespace ChoreMan.Controllers
                 return Json(new { LoggedIn = false, Message = ex.Message });
             }
         }
+
+
+        public ActionResult RefreshSession(string AuthToken)
+        {
+            try
+            {
+                Session["User"] = new _User(UserRepository.RefreshAuthToken(AuthToken));
+                return Json(new { LoggedIn = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { LoggedIn = false, Message = ex.Message });
+            }
+        }
     }
 }

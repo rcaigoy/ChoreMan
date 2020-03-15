@@ -8,5 +8,6 @@ namespace ChoreMan.Entities
     public partial class User
     {
         public string Password { get; set; }
+        public string AuthToken { get; set; }
     }
 }
