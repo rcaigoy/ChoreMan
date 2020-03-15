@@ -198,11 +198,29 @@
             $('#AddUser, .EditUser').on('click', function () {
                 SubmitUserButton.name = this.name;
                 if (this.name) {
-                    alert('Edit');
-
+                    //get chore user object
+                    $.ajax({
+                        url: '@Url.Action("GetChoreUser", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + SubmitUserButton.name,
+                        type: 'GET',
+                        success: function (data) {
+                            UserFirstName.value = data.FirstName;
+                            UserLastName.value = data.LastName;
+                            UserPhone.value = data.Phone;
+                            UserEmail.value = data.Email;
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+                    });//end $.ajax({
                 }
                 else {
-                    alert('Add');
+                    UserFirstName.value = '';
+                    UserLastName.value = '';
+                    UserPhone.value = '';
+                    UserEmail.value = '';
                 }
             });//end $('#AddUser').on('click', function () {
 
@@ -211,28 +229,32 @@
             $('#SubmitUserButton').on('click', function () {
                 let ChoreUserObject = {};
 
+                    ChoreUserObject['ChoreListId'] = @ViewBag.ChoreList.Id;
+                    ChoreUserObject['Phone'] = UserPhone.value;
+                    ChoreUserObject['Email'] = UserEmail.value;
+                    ChoreUserObject['FirstName'] = UserFirstName.value;
+                    ChoreUserObject['LastName'] = UserLastName.value;
+
                 if (this.name) {
                     let ChoreUserId = this.name;
+
                     $.ajax({
-                        url: '@Url.Action("EditChoreUser", "")'
+                        url: '@Url.Action("UpdateChoreUser", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + ChoreUserId
+                            + '&ChoreUserValues=' + escape(JSON.stringify(ChoreUserObject))
+                        ,
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                            alert('Success');
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
                     });//end $.ajax({
-                    @*
-                        <label>First Name</label>
-                        <input type="text" id="UserFirstName" />
-                        <br />
-
-                        <label>Last Name</label>
-                        <input type="text" id="UserLastName" />
-                        <br />
-
-                        <label>Phone</label>
-                        <input type="tel" id="UserPhone" />
-                        <br />
-
-                        <label>Email</label>
-                        <input type="email" id="UserEmail" />
-                        <br />
-                    *@
+                    
                 }//end if (this.name){
 
                 //if not this.name
@@ -243,7 +265,7 @@
                             + '&ChoreUserValues=' + escape(JSON.stringify(ChoreUserObject)),
                         type: 'POST',
                         success: function (data) {
-
+                            window.location.reload();
                         },
                         error: function (data) {
                             console.log(data);

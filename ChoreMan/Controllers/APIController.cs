@@ -153,9 +153,12 @@ namespace ChoreMan.Controllers
                 //get chorelist from chore user
                 var ChoreList = ChoreRepository.GetChoreList(ChoreUserObject.ChoreListId);
 
-                //check if userid matches chore list object
+                //check if userid matches chore list object user
                 if (User.Id != ChoreList.UserId)
                     throw new Exception("Unathorized");
+
+                //set Chore User as Active
+                ChoreUserObject.IsActive = true;
 
                 return OKResponse(new _ChoreUser(ChoreRepository.AddChoreUser(ChoreUserObject)));
             }
@@ -170,11 +173,24 @@ namespace ChoreMan.Controllers
         [HttpGet]
         [HttpOptions]
         [Route("api/getchoreuser")]
-        public HttpResponseMessage GetChoreUser(int Id)
+        public HttpResponseMessage GetChoreUser(string AuthToken, int Id)
         {
             try
             {
-                return OKResponse(new _ChoreUser(ChoreRepository.GetChoreUser(Id)));
+                //get user from auth token
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
+
+                //get chore user object from id
+                var ChoreUserObject = new _ChoreUser(ChoreRepository.GetChoreUser(Id));
+
+                //get chorelist from chore user object
+                var ChoreList = ChoreRepository.GetChoreList(ChoreUserObject.ChoreListId);
+
+                //check if userid matches chore list object user
+                if (User.Id != ChoreList.UserId)
+                    throw new Exception("Unathorized");
+
+                return OKResponse(ChoreUserObject);
             }
             catch (Exception ex)
             {
@@ -206,11 +222,23 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/updatechoreuser")]
-        public HttpResponseMessage UpdateChoreUser(int Id, string ChoreUserValues)
+        public HttpResponseMessage UpdateChoreUser(string AuthToken, int Id, string ChoreUserValues)
         {
             try
             {
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
                 ChoreUser ChoreUserObject = JsonConvert.DeserializeObject<ChoreUser>(ChoreUserValues);
+
+                //get chorelist from chore user
+                var ChoreList = ChoreRepository.GetChoreList(ChoreUserObject.ChoreListId);
+
+                //check if userid matches chore list object user
+                if (User.Id != ChoreList.UserId)
+                    throw new Exception("Unathorized");
+
+                //keep chore user as active
+                ChoreUserObject.IsActive = true;
+
                 return OKResponse(new _ChoreUser(ChoreRepository.UpdateChoreUser(Id, ChoreUserObject)));
             }
             catch (Exception ex)
