@@ -122,10 +122,15 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("usersapi/updateuserinfo")]
-        public HttpResponseMessage UpdateUserInfo(int Id, string UserValues)
+        public HttpResponseMessage UpdateUserInfo(string AuthToken, int Id, string UserValues)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                if (User.Id != Id)
+                    throw new Exception("Not Authorized");
+
                 var UserObject = JsonConvert.DeserializeObject<User>(UserValues);
                 return OKResponse(new _User(UserRepository.UpdateUserInfo(Id, UserObject)));
             }

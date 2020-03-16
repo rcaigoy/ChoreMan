@@ -203,6 +203,19 @@ namespace ChoreMan.Services
         }
 
 
+        public User GetUserByUsername(string Username)
+        {
+            try
+            {
+                return db.Users.Where(x => x.Username.ToLower() == Username.ToLower()).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
         //Update User Info
         public User UpdateUserInfo(int Id, User NewUser)
         {

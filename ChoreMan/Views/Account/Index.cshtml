@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Account</h2>
+
+<div id="UserForm">
+    <label>Username:</label>
+    <input type="text" id="Username" name="Username" value="@ViewBag.User.Username" />
+    <br />
+
+    <label>Email:</label>
+    <input type="email" id=Email" name="Email" value="@ViewBag.User.Email" />
+    <br />
+
+    <label>First Name:</label>
+    <input type="text" id="FirstName" name="FirstName" value="@ViewBag.User.FirstName" />
+    <br />
+
+    <label>Last Name:</label>
+    <input type="text" id="LastName" name="LastName" value="@ViewBag.User.LastName" />
+    <br />
+
+    <label>Phone:</label>
+    <input type="tel" id="Phone" name="Phone" value="@ViewBag.User.Phone" />
+    <br />
+
+    <button id="SaveUserInfo">Save</button>
+    <button class="Cancel">Cancel</button>
+
+</div>
+
+<br />
+
+<div id="PasswordForm">
+    <label>Current Password</label>
+    <input type="password" id="OldPassword" name="NewPassword" />
+    <br />
+
+    <label>New Password:</label>
+    <input type="password" id="NewPassword" name="NewPassword" />
+    <br />
+
+    <label>Confirm Password:</label>
+    <input type="password" id="ConfirmPassword" name="ConfirmPassword" />
+    <br />
+
+    <button id="ChangePassword">Change Password</button>
+    <button class="Cancel">Cancel</button>
+</div>
+
+
+<div id="AccountForm">
+    <label>Current Account Type:  </label>
+    
+</div>
+
+@section scripts{
+<script>
+    $(document).ready(function () {
+
+        //Save User Info
+        $('#SaveUserInfo').on('click', function () {
+            let UserObject = {};
+
+            $('#UserForm input').each(function () {
+                UserObject[this.name] = this.value;
+            });//end $('#UserForm input').each(function () {
+
+            $.ajax({
+                url: '@Url.Action("UpdateUserInfo", "UsersAPI")'
+                    + '?AuthToken=' + @ViewBag.User.AuthToken
+                    + '&Id=' + @ViewBag.User.id
+                    + '&UserValues=' + escape(JSON.stringify(UserObject))
+                ,
+                type: 'POST',
+                success: function (data) {
+                    alert('Successfully changed user info');
+                    window.location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('Error');
+                }
+            });//end $.ajax({
+        });//end $('#SaveUserInfo').on('click', function () {
+
+
+        $('#ChangePassword').on('click', function () {
+            if (OldPassword.value && NewPassword.value && OldPassword.value == NewPassword.value) {
+                $.ajax({
+                    url: '@Url.Action("UpdateUserPassword", "UsersAPI")'
+                        + '?Username=' + '@ViewBag.User.Username'
+                        + '&OldPassword=' + OldPassword.value
+                        + '&NewPassword=' + NewPassword.value
+                    ,
+                    type: 'POST',
+                    success: function (data) {
+                        alert('Password successfully changed');
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('Error');
+                    }
+                });//end $.ajax({
+            }
+            else {
+                alert('Passwords don\'t match');
+            }
+        });//end $('#ChangePassword').on('click', function () {
+
+
+
+
+    });//end $(document).ready(function () {
+</script>    
+}

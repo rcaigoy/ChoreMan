@@ -305,10 +305,10 @@
     <Content Include="Views\Chores\Index.cshtml" />
     <Content Include="Views\Chores\EditChoreList.cshtml" />
     <Content Include="Views\Chores\CreateChoreList.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
