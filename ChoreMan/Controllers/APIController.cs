@@ -275,11 +275,19 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/addchore")]
-        public HttpResponseMessage AddChore(string ChoreValues)
+        public HttpResponseMessage AddChore(string AuthToken, string ChoreValues)
         {
             try
             {
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
                 var ChoreObject = JsonConvert.DeserializeObject<Chore>(ChoreValues);
+
+                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList(ChoreObject.ChoreListId));
+
+                if (User.Id != ChoreList.UserId)
+                    throw new Exception("Unauthorized");
+
+                ChoreObject.IsActive = true;
 
                 return OKResponse(new _Chore(ChoreRepository.AddChore(ChoreObject)));
             }
@@ -294,11 +302,22 @@ namespace ChoreMan.Controllers
         [HttpGet]
         [HttpOptions]
         [Route("api/getchore")]
-        public HttpResponseMessage GetChore(int Id)
+        public HttpResponseMessage GetChore(string AuthToken, int Id)
         {
             try
             {
-                return OKResponse(new _Chore(ChoreRepository.GetChore(Id)));
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
+
+                //get chore from Id
+                var ChoreObject = new _Chore(ChoreRepository.GetChore(Id));
+
+                //get ChoreList from Choreobject
+                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList(ChoreObject.ChoreListId));
+
+                if (User.Id != ChoreList.UserId)
+                    throw new Exception("Unauthorized");
+
+                return OKResponse(ChoreObject);
             }
             catch (Exception ex)
             {
@@ -331,11 +350,23 @@ namespace ChoreMan.Controllers
         [HttpGet]
         [HttpPost]
         [Route("api/updatechore")]
-        public HttpResponseMessage UpdateChore(int Id, string ChoreValues)
+        public HttpResponseMessage UpdateChore(string AuthToken, int Id, string ChoreValues)
         {
             try
             {
+                _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
+
+                //get chore from Id
                 Chore ChoreObject = JsonConvert.DeserializeObject<Chore>(ChoreValues);
+
+                //get ChoreList from Choreobject
+                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList(ChoreObject.ChoreListId));
+
+                if (User.Id != ChoreList.UserId)
+                    throw new Exception("Unauthorized");
+
+                ChoreObject.IsActive = true;
+
                 return OKResponse(new _Chore(ChoreRepository.UpdateChore(Id, ChoreObject)));
             }
             catch (Exception ex)
@@ -372,11 +403,19 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/addrotationinterval")]
-        public HttpResponseMessage AddRotationInterval(string RotationIntervalValues)
+        public HttpResponseMessage AddRotationInterval(string AuthToken, string RotationIntervalValues)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
                 var RotationIntervalObject = JsonConvert.DeserializeObject<RotationInterval>(RotationIntervalValues);
+
+                if (!ChoreRepository.CanEditChoreList(User.Id, RotationIntervalObject.ChoreListId))
+                    throw new Exception("Not Authorized");
+
+                RotationIntervalObject.IsActive = true;
+
                 return OKResponse(new _RotationInterval(ChoreRepository.AddRotationInterval(RotationIntervalObject)));
             }
             catch (Exception ex)
@@ -390,11 +429,18 @@ namespace ChoreMan.Controllers
         [HttpGet]
         [HttpOptions]
         [Route("api/getrotationinterval")]
-        public HttpResponseMessage GetRotationInterval(int Id)
+        public HttpResponseMessage GetRotationInterval(string AuthToken, int Id)
         {
             try
             {
-                return OKResponse(new _RotationInterval(ChoreRepository.GetRotationInterval(Id)));
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                var RotationIntervalObject = new _RotationInterval(ChoreRepository.GetRotationInterval(Id));
+
+                if (!ChoreRepository.CanEditChoreList(User.Id, RotationIntervalObject.ChoreListId))
+                    throw new Exception("Not Authorized");
+
+                return OKResponse(RotationIntervalObject);
             }
             catch (Exception ex)
             {
@@ -428,11 +474,19 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/updaterotationinterval")]
-        public HttpResponseMessage UpdateRotationInterval(int Id, string RotationIntervalValues)
+        public HttpResponseMessage UpdateRotationInterval(string AuthToken, int Id, string RotationIntervalValues)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
                 var RotationIntervalObject = JsonConvert.DeserializeObject<RotationInterval>(RotationIntervalValues);
+
+                if (!ChoreRepository.CanEditChoreList(User.Id, RotationIntervalObject.ChoreListId))
+                    throw new Exception("Not Authorized");
+
+                RotationIntervalObject.IsActive = true;
+
                 return OKResponse(new _RotationInterval(ChoreRepository.UpdateRotationInterval(Id, RotationIntervalObject)));
             }
             catch (Exception ex)

@@ -346,6 +346,8 @@ namespace ChoreMan.Services
                 Value = db.RotationIntervals.Add(Value);
                 db.SaveChanges();
 
+                //Value.ChoreList = GetChoreList(Value.ChoreListId);
+                //Value.IntervalType = db.IntervalTypes.SingleOrDefault(x => x.IntervalTypeId == Value.IntervalTypeId);
                 return Value;
             }
             catch (Exception ex)
@@ -359,6 +361,7 @@ namespace ChoreMan.Services
         {
             try
             {
+                var RotationInterval = db.RotationIntervals.SingleOrDefault(x => x.Id == Id);
                 return db.RotationIntervals.SingleOrDefault(x => x.Id == Id);
             }
             catch(Exception ex)

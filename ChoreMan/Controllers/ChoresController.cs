@@ -42,7 +42,7 @@ namespace ChoreMan.Controllers
         }
 
 
-        public ActionResult EditChoreList(int Id)
+        public ActionResult EditChoreList(int Id = 0)
         {
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Register");

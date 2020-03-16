@@ -83,7 +83,7 @@
             }
         </table>
         <br />
-        <button>Add Chore</button>
+        <button id="AddChore">Add Chore</button>
     </div>
     <br />
 
@@ -102,7 +102,7 @@
                     </td>
 
                     <td>
-                        <label>Send every:  @RotationInterval.Number</label>
+                        <label>Send every:  @RotationInterval.IntervalNumber</label>
                     </td>
 
                     <td>
@@ -152,11 +152,21 @@
 
 <div id="ChorePopup">
     <h2 class="PopupTitle">Add Chore</h2>
+    <br />
 
+    <label>Name</label>
+    <input type="text" id="ChoreName" />
+    <br />
+
+    <label>Description</label>
+    <textarea id="ChoreDescription"></textarea>
     <br />
 
     <button id="SubmitChoreButton">Submit</button>
     <button class="Cancel">Cancel</button>
+    <br />
+
+    <button id="RemoveChore">Delete Chore</button>
 </div>
 
 <div id="RotationPopup">
@@ -165,21 +175,21 @@
     <input type="text" id="RotationStartDate" />
     <br />
 
+    <label>Every</label>
+    <input type="number" id="RotationIntervalNumber" />
+    <br />
+
     <label>IntervalType</label>
-    <select>
+    <select id="RotationIntervalType">
         <option value="1">Days</option>
         <option value="2">Business Days</option>
         <option value="3">Months</option>
     </select>
     <br />
 
-    <label>Active</label>
-    <input type="checkbox" />
     <br />
 
-    <br />
-
-    <button>Add Rotation</button>
+    <button id="SubmitRotationButton">Add Rotation</button>
     <button class="Cancel">Cancel</button>
 </div>
 
@@ -273,9 +283,170 @@
                         }
                     });//end $.ajax({
                 }
-
-
             });//end $('#SubmitUserButton').on('click', function () {
+
+
+            //Delete Chore User
+            $('#RemoveUser').on('click', function () {
+
+            });//end $('#RemoveUser').on('click', function () {
+
+
+            //Add/Edit Chore Popup Button
+            $('#AddChore, .EditChore').on('click', function () {
+                SubmitChoreButton.name = this.name;
+
+                if (this.name) {
+                    $.ajax({
+                        url: '@Url.Action("GetChore", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + SubmitChoreButton.name
+                        ,
+                        type: 'GET',
+                        success: function (data) {
+                            ChoreName.value = data.Name;
+                            ChoreDescription.value = data.Description;
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+                    });//end $.ajax({
+                }
+                else {
+                    ChoreName.value = '';
+                    ChoreDescription.value = '';
+                }
+            });//end $('#AddChore, .EditChore').on('click', function () {
+
+
+            //Submit Chore Button
+            $('#SubmitChoreButton').on('click', function () {
+                let ChoreObject = {};
+                ChoreObject['Name'] = ChoreName.value;
+                ChoreObject['Description'] = ChoreDescription.value;
+                ChoreObject['ChoreListId'] = @ViewBag.ChoreList.Id;
+
+                if (this.name) {
+                    let ChoreId = this.name;
+                    $.ajax({
+                        url: '@Url.Action("UpdateChore", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + ChoreId
+                            + '&ChoreValues=' + escape(JSON.stringify(ChoreObject))
+                        ,
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+                    });//end $.ajax({
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("AddChore", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&ChoreValues=' + escape(JSON.stringify(ChoreObject))
+                        ,
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+                    });//end $.ajax({
+                }
+
+            });//end $('#SubmitChoreButton').on('click', function () {
+
+
+            //Delete Chore Button
+
+
+            //Add/Edit Interval Popup Button
+            $('#AddRotation, .EditRotation').on('click', function () {
+                SubmitRotationButton.name = this.name;
+
+                if (this.name) {
+                    //get rotation interval information
+                    $.ajax({
+                        url: '@Url.Action("GetRotationInterval", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + SubmitRotationButton.name
+                        ,
+                        type: 'GET',
+                        success: function (data) {
+                            RotationStartDate.value = data.StartDate;
+                            RotationIntervalNumber.value = data.IntervalNumber;
+                            RotationIntervalType.value = data.IntervalTypeId;
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+
+                    });//end $.ajax({
+                }//end if (this.name){
+                else {
+                    RotationStartDate.value = '';
+                    RotationIntervalNumber.value = '';
+                    RotationIntervalType.value = '';
+                }
+
+            });//end $('#AddRotation, .EditRotation').on('click', function () {
+
+
+            //Submit Rotation Interval
+            $('#SubmitRotationButton').on('click', function () {
+                let RotationObject = {}
+                RotationObject['StartDate'] = RotationStartDate.value;
+                RotationObject['IntervalTypeId'] = RotationIntervalType.value;
+                RotationObject['IntervalNumber'] = RotationIntervalNumber.value;
+                RotationObject['ChoreListId'] = @ViewBag.ChoreList.Id;
+
+                if (this.name) {
+                    let RotationId = this.name;
+
+                    $.ajax({
+                        url: '@Url.Action("UpdateRotationInterval", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + RotationId
+                            + '&RotationIntervalValues=' + escape(JSON.stringify(RotationObject))
+                        ,
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+                    });//end $.ajax({
+
+                }//end if (this.name){
+                else {
+                     $.ajax({
+                        url: '@Url.Action("AddRotationInterval", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&RotationIntervalValues=' + escape(JSON.stringify(RotationObject))
+                        ,
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+                    });//end $.ajax({
+                }
+
+            });//end $('#SubmitRotationButton').on('click', function () {
 
         });//end $(document).ready(function () {
     </script>

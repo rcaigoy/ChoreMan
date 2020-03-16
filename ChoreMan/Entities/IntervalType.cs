@@ -23,7 +23,6 @@ namespace ChoreMan.Entities
         public int IntervalTypeId { get; set; }
         public string IntervalType1 { get; set; }
     
-        public virtual RotationInterval RotationInterval { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RotationInterval> RotationIntervals { get; set; }
     }
