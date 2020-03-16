@@ -27,6 +27,7 @@ namespace ChoreMan.Entities
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AccountType> AccountTypes { get; set; }
         public virtual DbSet<ChoreList> ChoreLists { get; set; }
         public virtual DbSet<ChoreListType> ChoreListTypes { get; set; }
         public virtual DbSet<Chore> Chores { get; set; }

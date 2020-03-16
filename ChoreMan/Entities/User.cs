@@ -34,6 +34,7 @@ namespace ChoreMan.Entities
         public int NumberOfLoginAttempts { get; set; }
         public int AccountTypeId { get; set; }
     
+        public virtual AccountType AccountType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChoreList> ChoreLists { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -220,12 +220,14 @@ namespace ChoreMan.Services
                 //except Id
                 //and except PasswordHash
                 //and except Salt
+                //and except account type id
                 foreach (var property in NewUser
                                             .GetType()
                                             .GetProperties()
                                             .Where(x => x.Name != "Id" 
                                                 && x.Name != "PasswordHash" 
-                                                && x.Name != "Salt"))
+                                                && x.Name != "Salt"
+                                                && x.Name != "AccountTypeId"))
                 {
                     //get the value of the iterated property
                     var value = property.GetValue(NewUser);
@@ -280,6 +282,24 @@ namespace ChoreMan.Services
 
                 //if not successful, state db exception
                 throw new Exception(result);
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        //Update Account Type
+        public User ChangeAccountType(int UserId, int AccountTypeId)
+        {
+            try
+            {
+                var User = db.Users.SingleOrDefault(x => x.Id == UserId);
+                User.AccountTypeId = AccountTypeId;
+                db.SaveChanges();
+
+                return User;
             }
             catch (Exception ex)
             {
