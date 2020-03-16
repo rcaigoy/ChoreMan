@@ -122,10 +122,15 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/deletechorelist")]
-        public HttpResponseMessage DeleteChoreList(int Id)
+        public HttpResponseMessage DeleteChoreList(string AuthToken, int Id)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                if (!ChoreRepository.CanEditChoreList(User.Id, Id))
+                    throw new Exception("Not Authorized");
+
                 return OKResponse(new _ChoreList(ChoreRepository.DeleteChoreList(Id)));
             }
             catch (Exception ex)
@@ -252,10 +257,19 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/deletechoreuser")]
-        public HttpResponseMessage DeleteChoreUser(int Id)
+        public HttpResponseMessage DeleteChoreUser(string AuthToken, int Id)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                //get ChoreUser
+                var ChoreUser = ChoreRepository.GetChoreUser(Id);
+
+                //check if userid matches chore list object user
+                if (ChoreRepository.CanEditChoreList(User.Id, ChoreUser.ChoreListId))
+                    throw new Exception("Unathorized");
+
                 return OKResponse(new _ChoreUser(ChoreRepository.DeleteChoreUser(Id)));
             }
             catch (Exception ex)
@@ -282,7 +296,7 @@ namespace ChoreMan.Controllers
                 _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
                 var ChoreObject = JsonConvert.DeserializeObject<Chore>(ChoreValues);
 
-                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList(ChoreObject.ChoreListId));
+                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList((int)ChoreObject.ChoreListId));
 
                 if (User.Id != ChoreList.UserId)
                     throw new Exception("Unauthorized");
@@ -360,7 +374,7 @@ namespace ChoreMan.Controllers
                 Chore ChoreObject = JsonConvert.DeserializeObject<Chore>(ChoreValues);
 
                 //get ChoreList from Choreobject
-                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList(ChoreObject.ChoreListId));
+                var ChoreList = new _ChoreList(ChoreRepository.GetChoreList((int)ChoreObject.ChoreListId));
 
                 if (User.Id != ChoreList.UserId)
                     throw new Exception("Unauthorized");
@@ -380,10 +394,17 @@ namespace ChoreMan.Controllers
         [HttpGet]
         [HttpPost]
         [Route("api/deletechore")]
-        public HttpResponseMessage DeleteChore(int Id)
+        public HttpResponseMessage DeleteChore(string AuthToken, int Id)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                var Chore = ChoreRepository.GetChore(Id);
+
+                if (!ChoreRepository.CanEditChoreList(User.Id, (int)Chore.ChoreListId))
+                    throw new Exception("Not Authorized");
+
                 return OKResponse(new _Chore(ChoreRepository.DeleteChore(Id)));
             }
             catch (Exception ex)
@@ -501,10 +522,17 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/deleterotationinterval")]
-        public HttpResponseMessage DeleteRotationInterval(int Id)
+        public HttpResponseMessage DeleteRotationInterval(string AuthToken, int Id)
         {
             try
             {
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                var RotationInterval = ChoreRepository.GetRotationInterval(Id);
+
+                if (!ChoreRepository.CanEditChoreList(User.Id, RotationInterval.ChoreListId))
+                    throw new Exception("Not Authorized");
+
                 return OKResponse(new _RotationInterval(ChoreRepository.DeleteRotationInterval(Id)));
             }
             catch (Exception ex)

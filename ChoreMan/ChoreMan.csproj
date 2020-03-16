@@ -236,8 +236,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Entities\ChoreManModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ChoreManModel.Context.cs</LastGenOutput>
       <DependentUpon>ChoreManModel.edmx</DependentUpon>
+      <LastGenOutput>ChoreManModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Entities\ChoreManModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -15,7 +15,7 @@ namespace ChoreMan.Entities
     public partial class Chore
     {
         public int Id { get; set; }
-        public int ChoreListId { get; set; }
+        public Nullable<int> ChoreListId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }

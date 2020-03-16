@@ -39,7 +39,7 @@ namespace ChoreMan.Services
                 Value = db.ChoreLists.Add(Value);
                 db.SaveChanges();
 
-                return Value;
+                return GetChoreList(Value.Id);
             }
             catch (Exception ex)
             {
@@ -52,7 +52,9 @@ namespace ChoreMan.Services
         {
             try
             {
-                return db.ChoreLists.SingleOrDefault(x => x.Id == Id);
+                var Chore = db.ChoreLists.SingleOrDefault(x => x.Id == Id);
+                Chore.ChoreListType = db.ChoreListTypes.SingleOrDefault(x => x.Id == Chore.ChoreListTypeId);
+                return Chore;
             }
             catch (Exception ex)
             {
@@ -239,7 +241,9 @@ namespace ChoreMan.Services
         {
             try
             {
-                Value = db.Chores.Add(Value);
+                //Value.ChoreList = GetChoreList(Value.ChoreListId);
+                Value.ChoreList = db.ChoreLists.SingleOrDefault(x => x.Id == Value.ChoreListId);
+                db.Chores.Add(Value);
                 db.SaveChanges();
                 return Value;
             }
@@ -346,9 +350,7 @@ namespace ChoreMan.Services
                 Value = db.RotationIntervals.Add(Value);
                 db.SaveChanges();
 
-                //Value.ChoreList = GetChoreList(Value.ChoreListId);
-                //Value.IntervalType = db.IntervalTypes.SingleOrDefault(x => x.IntervalTypeId == Value.IntervalTypeId);
-                return Value;
+                return GetRotationInterval(Value.Id);
             }
             catch (Exception ex)
             {
@@ -362,6 +364,7 @@ namespace ChoreMan.Services
             try
             {
                 var RotationInterval = db.RotationIntervals.SingleOrDefault(x => x.Id == Id);
+                RotationInterval.IntervalType = db.IntervalTypes.SingleOrDefault(x => x.IntervalTypeId == RotationInterval.IntervalTypeId);
                 return db.RotationIntervals.SingleOrDefault(x => x.Id == Id);
             }
             catch(Exception ex)

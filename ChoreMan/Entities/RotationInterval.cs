@@ -21,7 +21,7 @@ namespace ChoreMan.Entities
         public int IntervalNumber { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual IntervalType IntervalType { get; set; }
         public virtual ChoreList ChoreList { get; set; }
+        public virtual IntervalType IntervalType { get; set; }
     }
 }
