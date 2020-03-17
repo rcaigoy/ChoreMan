@@ -51,6 +51,7 @@
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
           <Property Name="IsVerified" Type="bit" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsPendingCancel" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="IntervalType">
           <Key>
@@ -129,18 +130,6 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Chores">
-              <PropertyRef Name="ChoreListId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ChoreUsers_ChoreLists">
-          <End Role="ChoreList" Type="Self.ChoreList" Multiplicity="1" />
-          <End Role="ChoreUsers" Type="Self.ChoreUsers" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ChoreList">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ChoreUsers">
               <PropertyRef Name="ChoreListId" />
             </Dependent>
           </ReferentialConstraint>
@@ -233,10 +222,6 @@
           <AssociationSet Name="FK_Chores_ChoreLists" Association="Self.FK_Chores_ChoreLists">
             <End Role="ChoreList" EntitySet="ChoreList" />
             <End Role="Chores" EntitySet="Chores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ChoreUsers_ChoreLists" Association="Self.FK_ChoreUsers_ChoreLists">
-            <End Role="ChoreList" EntitySet="ChoreList" />
-            <End Role="ChoreUsers" EntitySet="ChoreUsers" />
           </AssociationSet>
           <AssociationSet Name="FK_RotationIntervals_ChoreLists" Association="Self.FK_RotationIntervals_ChoreLists">
             <End Role="ChoreList" EntitySet="ChoreList" />
@@ -376,6 +361,7 @@
           <Property Name="IsVerified" Type="Boolean" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="ChoremanModel.FK_ChoreUsers_ChoreLists" FromRole="ChoreUser" ToRole="ChoreList" />
+          <Property Name="IsPendingCancel" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="IntervalType">
           <Key>
@@ -575,6 +561,7 @@
           <EntitySetMapping Name="ChoreUsers">
             <EntityTypeMapping TypeName="ChoremanModel.ChoreUser">
               <MappingFragment StoreEntitySet="ChoreUsers">
+                <ScalarProperty Name="IsPendingCancel" ColumnName="IsPendingCancel" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />

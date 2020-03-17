@@ -140,6 +140,9 @@ namespace ChoreMan.Services
                 //get session
                 var session = db.Sessions.SingleOrDefault(x => x.BearerToken == AuthToken);
 
+                if (DateTime.Now > session.ExpirationDate)
+                    throw new Exception("Authorization Expired");
+
                 //update expiratin date
                 session.ExpirationDate = DateTime.Now.AddDays(1);
                 db.SaveChanges();

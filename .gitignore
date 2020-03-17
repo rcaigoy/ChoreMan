@@ -265,4 +265,5 @@ __pycache__/
 /.vs/
 /Choreman/bin/
 /Choreman/obj/
+/ChoreMan/PrivateValues.cs
 
