@@ -4,24 +4,22 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="fecaf62a81814998a37dad1a44bfe313" Name="Diagram1" ZoomLevel="40">
-        <EntityTypeShape EntityType="ChoremanModel.AccountType" Width="1.5" PointX="0.75" PointY="6.625" />
-        <EntityTypeShape EntityType="ChoremanModel.ChoreList" Width="1.5" PointX="8.25" PointY="5.875" />
-        <EntityTypeShape EntityType="ChoremanModel.ChoreListType" Width="1.5" PointX="6" PointY="3.625" />
-        <EntityTypeShape EntityType="ChoremanModel.Chore" Width="1.5" PointX="10.5" PointY="7.875" />
-        <EntityTypeShape EntityType="ChoremanModel.ChoreUser" Width="1.5" PointX="10.5" PointY="10.75" />
-        <EntityTypeShape EntityType="ChoremanModel.IntervalType" Width="1.5" PointX="8.25" PointY="2.625" />
-        <EntityTypeShape EntityType="ChoremanModel.RotationInterval" Width="1.5" PointX="10.5" PointY="4.125" />
-        <EntityTypeShape EntityType="ChoremanModel.Session" Width="1.5" PointX="5.25" PointY="6.25" />
-        <EntityTypeShape EntityType="ChoremanModel.User" Width="1.5" PointX="3" PointY="5.375" />
-        <AssociationConnector Association="ChoremanModel.FK_Users_AccountType" />
-        <AssociationConnector Association="ChoremanModel.FK_ChoreLists_ChoreListTypes" />
-        <AssociationConnector Association="ChoremanModel.FK_ChoreLists_Users" />
-        <AssociationConnector Association="ChoremanModel.FK_Chores_ChoreLists" />
-        <AssociationConnector Association="ChoremanModel.FK_ChoreUsers_ChoreLists" />
-        <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_ChoreLists" />
-        <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_IntervalType" />
-        <AssociationConnector Association="ChoremanModel.FK_Session_Users" />
+      <Diagram DiagramId="01b674c0b39441b9a8af3dd1b58ba240" Name="Diagram1">
+        <EntityTypeShape EntityType="ChoremanModel.AccountType" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.ChoreList" Width="1.5" PointX="5.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.Chore" Width="1.5" PointX="7.5" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.ChoreUser" Width="1.5" PointX="7.5" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.IntervalType" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.RotationInterval" Width="1.5" PointX="10.5" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.Session" Width="1.5" PointX="5.25" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChoremanModel.User" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
+        <AssociationConnector Association="ChoremanModel.FK_Users_AccountType" ManuallyRouted="false" />
+        <AssociationConnector Association="ChoremanModel.FK_ChoreLists_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="ChoremanModel.FK_Chores_ChoreLists" ManuallyRouted="false" />
+        <AssociationConnector Association="ChoremanModel.FK_ChoreUsers_ChoreLists" ManuallyRouted="false" />
+        <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_ChoreLists" ManuallyRouted="false" />
+        <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_IntervalType" ManuallyRouted="false" />
+        <AssociationConnector Association="ChoremanModel.FK_Session_Users" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

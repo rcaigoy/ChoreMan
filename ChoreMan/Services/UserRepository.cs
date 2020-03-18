@@ -109,7 +109,7 @@ namespace ChoreMan.Services
                 while (string.IsNullOrEmpty(session.BearerToken) || db.Sessions.Count(x => x.BearerToken == session.BearerToken) > 0)
                 {
                     //always create new GUID
-                    session.BearerToken = Guid.NewGuid().ToString();
+                    session.BearerToken = Guid.NewGuid().ToString("n");
                 }
                 session.RefreshToken = session.BearerToken;
 

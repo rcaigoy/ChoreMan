@@ -267,7 +267,7 @@ namespace ChoreMan.Controllers
                 var ChoreUser = ChoreRepository.GetChoreUser(Id);
 
                 //check if userid matches chore list object user
-                if (ChoreRepository.CanEditChoreList(User.Id, ChoreUser.ChoreListId))
+                if (!ChoreRepository.CanEditChoreList(User.Id, ChoreUser.ChoreListId))
                     throw new Exception("Unathorized");
 
                 return OKResponse(new _ChoreUser(ChoreRepository.DeleteChoreUser(Id)));
@@ -294,7 +294,7 @@ namespace ChoreMan.Controllers
             try
             {
                 _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
-                var ChoreObject = JsonConvert.DeserializeObject<Chore>(ChoreValues);
+                Chore ChoreObject = JsonConvert.DeserializeObject<Chore>(ChoreValues);
 
                 var ChoreList = new _ChoreList(ChoreRepository.GetChoreList((int)ChoreObject.ChoreListId));
 

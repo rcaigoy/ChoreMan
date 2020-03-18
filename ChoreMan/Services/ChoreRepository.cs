@@ -11,7 +11,7 @@ namespace ChoreMan.Services
 {
     public class ChoreRepository
     {
-        public ChoremanEntities db { get; set; }
+        public ChoremanEntities db { get; }
         public ChoreRepository() 
         { 
             try
@@ -52,9 +52,28 @@ namespace ChoreMan.Services
         {
             try
             {
-                var Chore = db.ChoreLists.SingleOrDefault(x => x.Id == Id);
-                Chore.ChoreListType = db.ChoreListTypes.SingleOrDefault(x => x.Id == Chore.ChoreListTypeId);
-                return Chore;
+                var ChoreList = db.ChoreLists.SingleOrDefault(x => x.Id == Id);
+
+                int i = 1;
+                //re-order chore users
+                foreach (var ChoreUser in ChoreList.ChoreUsers.Where(x => x.IsActive).OrderBy(x => x.SortOrder))
+                {
+                    ChoreUser.SortOrder = i;
+                    i++;
+                }
+
+                i = 1;
+
+                //re-order chores
+                foreach (var Chore in ChoreList.Chores.Where(x => x.IsActive).OrderBy(x => x.SortOrder))
+                {
+                    Chore.SortOrder = i;
+                    i++;
+                }
+
+                db.SaveChanges();
+
+                return ChoreList;
             }
             catch (Exception ex)
             {
@@ -124,6 +143,10 @@ namespace ChoreMan.Services
         {
             try
             {
+                //set sort order to last
+                Value.SortOrder = db.ChoreUsers.Count(x => x.ChoreListId == Value.ChoreListId && x.IsActive) + 1;
+
+                //add value
                 Value = db.ChoreUsers.Add(Value);
                 db.SaveChanges();
 
@@ -173,7 +196,8 @@ namespace ChoreMan.Services
                 foreach (var property in NewChoreUser
                                             .GetType()
                                             .GetProperties()
-                                            .Where(x => x.Name != "Id"))
+                                            .Where(x => x.Name != "Id"
+                                                && x.Name != "SortOrder"))
                 {
                     //get the value of the iterated property
                     var value = property.GetValue(NewChoreUser);
@@ -221,6 +245,16 @@ namespace ChoreMan.Services
             {
                 var ChoreUser = db.ChoreUsers.SingleOrDefault(x => x.Id == Id);
                 ChoreUser.IsActive = false;
+
+                int i = 1;
+
+                //reorder chore users
+                foreach (var c in db.ChoreUsers.Where(x => x.ChoreListId == ChoreUser.ChoreListId && x.IsActive))
+                {
+                    c.SortOrder = i;
+                    i++;
+                }
+
                 db.SaveChanges();
 
                 return ChoreUser;
@@ -236,15 +270,19 @@ namespace ChoreMan.Services
 
         #region CHORES
 
+        //https://stackoverflow.com/questions/32675411/the-relationship-could-not-be-changed-because-one-or-more-of-the-foreign-key-pro
         //Create
         public Chore AddChore(Chore Value)
         {
             try
             {
-                //Value.ChoreList = GetChoreList(Value.ChoreListId);
-                Value.ChoreList = db.ChoreLists.SingleOrDefault(x => x.Id == Value.ChoreListId);
-                db.Chores.Add(Value);
+                Value.SortOrder = db.Chores.Count(x => x.ChoreListId == Value.ChoreListId && x.IsActive) + 1;
+
+                //add to db
+                Value = db.Chores.Add(Value);
+
                 db.SaveChanges();
+
                 return Value;
             }
             catch (Exception ex)
@@ -291,10 +329,12 @@ namespace ChoreMan.Services
 
                 //iterate through all properties
                 //except Id
+                //and except sort order
                 foreach (var property in NewChore
                                             .GetType()
                                             .GetProperties()
-                                            .Where(x => x.Name != "Id"))
+                                            .Where(x => x.Name != "Id"
+                                                && x.Name != "SortOrder"))
                 {
                     //get the value of the iterated property
                     var value = property.GetValue(NewChore);

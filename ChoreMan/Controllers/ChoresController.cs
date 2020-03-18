@@ -19,6 +19,7 @@ namespace ChoreMan.Controllers
         {
             this.ChoreRepository = new ChoreRepository();
         }
+
         // GET: Chores
         public ActionResult Index()
         {

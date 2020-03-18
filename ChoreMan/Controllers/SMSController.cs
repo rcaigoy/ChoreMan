@@ -61,7 +61,6 @@ namespace ChoreMan.Controllers
                 //check if Phone Number is in system
                 if (TwilioRepository.IsChoreUser(PhoneDBValue))
                 {
-
                     //check if body contains word stop
                     if (ToParse.Contains("STOPALL"))
                     {
@@ -143,6 +142,20 @@ namespace ChoreMan.Controllers
                 Response.Message(MessageBody);
 
                 return TwiML(Response);
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        [HttpPost]
+        public bool SendNotifications(string AppToken)
+        {
+            try
+            {
+                return TwilioRepository.SendAllNotifications(AppToken);
             }
             catch (Exception ex)
             {

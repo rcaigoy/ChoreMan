@@ -27,8 +27,8 @@ namespace ChoreMan.Models
         public _ChoreList(ChoreList Value)
         {
             //recreate chorelist sub lists
-            Value.ChoreUsers = Value.ChoreUsers.Where(x => x.IsActive).ToList();
-            Value.Chores = Value.Chores.Where(x => x.IsActive).ToList();
+            Value.ChoreUsers = Value.ChoreUsers.Where(x => x.IsActive).OrderBy(x => x.SortOrder).ToList();
+            Value.Chores = Value.Chores.Where(x => x.IsActive).OrderBy(x => x.SortOrder).ToList();
             Value.RotationIntervals = Value.RotationIntervals.Where(x => x.IsActive).ToList();
 
             TinyMapper.Bind<ChoreList, _ChoreList>(config =>
@@ -40,7 +40,6 @@ namespace ChoreMan.Models
 
             TinyMapper.Map<ChoreList, _ChoreList>(Value, this);
 
-            this.ChoreListTypeName = Value.ChoreListType.ChoreListType1;
         }
     }
 }

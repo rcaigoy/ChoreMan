@@ -23,6 +23,7 @@ namespace ChoreMan.Entities
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
         public bool IsPendingCancel { get; set; }
+        public int SortOrder { get; set; }
     
         public virtual ChoreList ChoreList { get; set; }
     }

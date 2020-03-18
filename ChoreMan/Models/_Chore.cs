@@ -15,7 +15,7 @@ namespace ChoreMan.Models
         public int ChoreListId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
+        public int SortOrder { get; set; }
         public _Chore() { }
 
         public _Chore(Chore Value)

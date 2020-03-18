@@ -8,14 +8,6 @@
 <div id="SaveForm">
 </div>
 <div id="ChoreListForm">
-    <label>ChoreListType</label>
-    <select id="ChoreListTypeId">
-        <option value="@ViewBag.ChoreList.ChoreListTypeId">@ViewBag.ChoreList.ChoreListTypeName</option>
-        <option value="1">Skip</option>
-        <option value="2">Overload</option>
-    </select>
-    <br />
-
     <label>Set Active</label>
     <input type="checkbox" @if (ViewBag.Chorelist.IsActive) { WriteLiteral("checked"); } />
     <br />
@@ -36,6 +28,9 @@
             @foreach (var ChoreUser in ViewBag.ChoreList.ChoreUsers)
             {
                 <tr>
+                    <td>
+                        <label>@ChoreUser.SortOrder</label>
+                    </td>
                     <td>
                         <label>@ChoreUser.FirstName @ChoreUser.LastName</label>
                     </td>
@@ -76,6 +71,9 @@
             @foreach (var Chore in ViewBag.ChoreList.Chores)
             {
                 <tr>
+                    <td>
+                        <label>@Chore.SortOrder</label>
+                    </td>
                     <td>
                         <label>@Chore.Name</label>
                     </td>
@@ -302,7 +300,7 @@
             //Delete Chore User
             $('#RemoveUser').on('click', function () {
                 if (SubmitUserButton.name) {
-                    let confirm = windows.confirm('Are you sure you want to remove this user?');
+                    let confirm = window.confirm('Are you sure you want to remove this user?');
                     if (confirm) {
                         $.ajax({
                             url: '@Url.Action("DeleteChoreUser", "API")'

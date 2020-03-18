@@ -12,13 +12,6 @@
     <input type="text" id="Name" name="Name" />
     <br />
 
-    <label>Chore List Type</label>
-    <select id="ChoreListTypeId" name="ChoreListTypeId">
-        <option value="1">Skip</option>
-        <option value="2">Overload</option>
-    </select>
-    <br />
-
     <button id="Create">Create Chore List</button>
 </div>
 
@@ -30,7 +23,6 @@
             let ChoreListObject = {};
 
             ChoreListObject['Name'] = Name.value;
-            ChoreListObject['ChoreListTypeId'] = ChoreListTypeId.value;
             ChoreListObject['UserId'] = @ViewBag.User.Id;
 
             //ajax call

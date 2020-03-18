@@ -19,6 +19,7 @@ namespace ChoreMan.Models
         public string LastName { get; set; }
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
+        public int SortOrder { get; set; }
 
         public _ChoreUser() { }
 

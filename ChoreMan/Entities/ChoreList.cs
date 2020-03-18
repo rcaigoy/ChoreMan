@@ -24,11 +24,9 @@ namespace ChoreMan.Entities
     
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int ChoreListTypeId { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
     
-        public virtual ChoreListType ChoreListType { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Chore> Chores { get; set; }

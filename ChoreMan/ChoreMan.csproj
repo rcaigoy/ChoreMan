@@ -196,47 +196,43 @@
     <Compile Include="Controllers\UsersAPIController.cs" />
     <Compile Include="CustomAuthorizeAttribute.cs" />
     <Compile Include="Entities\AccountType.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Chore.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\ChoreList.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ChoreListType.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ChoremanEntities.cs" />
-    <Compile Include="Entities\ChoreManModel.Context.cs">
+    <Compile Include="Entities\ChoremanModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ChoreManModel.Context.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ChoreManModel.cs">
+    <Compile Include="Entities\ChoremanModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ChoreManModel.Designer.cs">
+    <Compile Include="Entities\ChoremanModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ChoreManModel.edmx</DependentUpon>
+      <DependentUpon>ChoremanModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Entities\ChoreUser.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\IntervalType.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\RotationInterval.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Session.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\User.cs">
-      <DependentUpon>ChoreManModel.tt</DependentUpon>
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\UserEntities.cs" />
     <Compile Include="Global.asax.cs">
@@ -260,15 +256,15 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Entities\ChoreManModel.Context.tt">
+    <Content Include="Entities\ChoremanModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ChoreManModel.edmx</DependentUpon>
-      <LastGenOutput>ChoreManModel.Context.cs</LastGenOutput>
+      <DependentUpon>ChoremanModel.edmx</DependentUpon>
+      <LastGenOutput>ChoremanModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Entities\ChoreManModel.tt">
+    <Content Include="Entities\ChoremanModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ChoreManModel.edmx</DependentUpon>
-      <LastGenOutput>ChoreManModel.cs</LastGenOutput>
+      <DependentUpon>ChoremanModel.edmx</DependentUpon>
+      <LastGenOutput>ChoremanModel.cs</LastGenOutput>
     </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -294,12 +290,12 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <EntityDeploy Include="Entities\ChoreManModel.edmx">
+    <EntityDeploy Include="Entities\ChoremanModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ChoreManModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>ChoremanModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Entities\ChoreManModel.edmx.diagram">
-      <DependentUpon>ChoreManModel.edmx</DependentUpon>
+    <Content Include="Entities\ChoremanModel.edmx.diagram">
+      <DependentUpon>ChoremanModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

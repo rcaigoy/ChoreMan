@@ -221,5 +221,20 @@ namespace ChoreMan.Services
                 throw Utility.ThrowException(ex);
             }
         }
+
+
+        //Send all Rotations
+        public static bool SendAllNotifications(string AppToken)
+        {
+            if (AppToken == "c18db1132b374695804479ecc45c4b8ddceeb1f01822467e9447e6e67628ad4d0e397cca42404101affa2f76ff8f2b3130b731741b3a42f8b195dfd566b7d7da")
+            {
+                using (var db = new ChoremanEntities())
+                {
+                    //get all chorelists
+                    //calculate 
+                }
+            }
+            return false;
+        }
     }
 }

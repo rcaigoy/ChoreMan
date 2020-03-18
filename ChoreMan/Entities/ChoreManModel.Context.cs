@@ -29,7 +29,6 @@ namespace ChoreMan.Entities
     
         public virtual DbSet<AccountType> AccountTypes { get; set; }
         public virtual DbSet<ChoreList> ChoreLists { get; set; }
-        public virtual DbSet<ChoreListType> ChoreListTypes { get; set; }
         public virtual DbSet<Chore> Chores { get; set; }
         public virtual DbSet<ChoreUser> ChoreUsers { get; set; }
         public virtual DbSet<IntervalType> IntervalTypes { get; set; }
