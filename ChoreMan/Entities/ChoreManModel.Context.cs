@@ -35,6 +35,7 @@ namespace ChoreMan.Entities
         public virtual DbSet<RotationInterval> RotationIntervals { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
     
         public virtual int Authenticate(string pUsername, string pPassword, ObjectParameter responseMessage)
         {

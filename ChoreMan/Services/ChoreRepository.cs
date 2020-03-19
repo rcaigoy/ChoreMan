@@ -11,7 +11,7 @@ namespace ChoreMan.Services
 {
     public class ChoreRepository
     {
-        public ChoremanEntities db { get; }
+        private ChoremanEntities db { get; }
         public ChoreRepository() 
         { 
             try

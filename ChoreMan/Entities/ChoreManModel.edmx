@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ChoremanModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ChoremanModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AccountTypes">
           <Key>
             <PropertyRef Name="AccountTypeId" />
@@ -53,6 +53,23 @@
           </Key>
           <Property Name="IntervalTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IntervalType1" Type="nvarchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ChoreUserId" Type="int" />
+          <Property Name="ChoreId" Type="int" />
+          <Property Name="Phone" Type="nchar" MaxLength="10" />
+          <Property Name="Email" Type="nchar" MaxLength="10" />
+          <Property Name="DateScheduled" Type="datetime" Nullable="false" />
+          <Property Name="DateSent" Type="datetime" />
+          <Property Name="IsVerified" Type="bit" Nullable="false" />
+          <Property Name="IsSent" Type="bit" Nullable="false" />
+          <Property Name="IsComplete" Type="bit" Nullable="false" />
+          <Property Name="Sid" Type="nvarchar" MaxLength="50" />
+          <Property Name="ErrorLog" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="RotationIntervals">
           <Key>
@@ -125,6 +142,30 @@
             </Principal>
             <Dependent Role="ChoreUsers">
               <PropertyRef Name="ChoreListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Messages_Chores">
+          <End Role="Chores" Type="Self.Chores" Multiplicity="0..1" />
+          <End Role="Messages" Type="Self.Messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messages">
+              <PropertyRef Name="ChoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Messages_ChoreUsers">
+          <End Role="ChoreUsers" Type="Self.ChoreUsers" Multiplicity="0..1" />
+          <End Role="Messages" Type="Self.Messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messages">
+              <PropertyRef Name="ChoreUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -201,6 +242,7 @@
           <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChoreUsers" EntityType="Self.ChoreUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IntervalTypes" EntityType="Self.IntervalTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RotationIntervals" EntityType="Self.RotationIntervals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sessions" EntityType="Self.Sessions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -215,6 +257,14 @@
           <AssociationSet Name="FK_ChoreUsers_ChoreLists" Association="Self.FK_ChoreUsers_ChoreLists">
             <End Role="ChoreLists" EntitySet="ChoreLists" />
             <End Role="ChoreUsers" EntitySet="ChoreUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Messages_Chores" Association="Self.FK_Messages_Chores">
+            <End Role="Chores" EntitySet="Chores" />
+            <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Messages_ChoreUsers" Association="Self.FK_Messages_ChoreUsers">
+            <End Role="ChoreUsers" EntitySet="ChoreUsers" />
+            <End Role="Messages" EntitySet="Messages" />
           </AssociationSet>
           <AssociationSet Name="FK_RotationIntervals_ChoreLists" Association="Self.FK_RotationIntervals_ChoreLists">
             <End Role="ChoreLists" EntitySet="ChoreLists" />
@@ -233,8 +283,7 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ChoremanModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -270,6 +319,7 @@
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="SortOrder" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="Self.FK_Chores_ChoreLists" FromRole="Chores" ToRole="ChoreLists" />
+          <NavigationProperty Name="Messages" Relationship="ChoremanModel.FK_Messages_Chores" FromRole="Chore" ToRole="Message" />
         </EntityType>
         <EntityType Name="ChoreUser">
           <Key>
@@ -286,6 +336,7 @@
           <Property Name="IsPendingCancel" Type="Boolean" Nullable="false" />
           <Property Name="SortOrder" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ChoreList" Relationship="Self.FK_ChoreUsers_ChoreLists" FromRole="ChoreUsers" ToRole="ChoreLists" />
+          <NavigationProperty Name="Messages" Relationship="ChoremanModel.FK_Messages_ChoreUsers" FromRole="ChoreUser" ToRole="Message" />
         </EntityType>
         <EntityType Name="IntervalType">
           <Key>
@@ -479,7 +530,59 @@
             <Parameter Name="pPassword" Mode="In" Type="String" />
             <Parameter Name="responseMessage" Mode="InOut" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Messages" EntityType="ChoremanModel.Message" />
+          <AssociationSet Name="FK_Messages_Chores" Association="ChoremanModel.FK_Messages_Chores">
+            <End Role="Chore" EntitySet="Chores" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Messages_ChoreUsers" Association="ChoremanModel.FK_Messages_ChoreUsers">
+            <End Role="ChoreUser" EntitySet="ChoreUsers" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ChoreUserId" Type="Int32" />
+          <Property Name="ChoreId" Type="Int32" />
+          <Property Name="Phone" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="DateScheduled" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateSent" Type="DateTime" Precision="3" />
+          <Property Name="IsComplete" Type="Boolean" Nullable="false" />
+          <Property Name="ErrorLog" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Chore" Relationship="ChoremanModel.FK_Messages_Chores" FromRole="Message" ToRole="Chore" />
+          <NavigationProperty Name="ChoreUser" Relationship="ChoremanModel.FK_Messages_ChoreUsers" FromRole="Message" ToRole="ChoreUser" />
+          <Property Name="IsVerified" Type="Boolean" Nullable="false" />
+          <Property Name="IsSent" Type="Boolean" Nullable="false" />
+          <Property Name="Sid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Messages_Chores">
+          <End Type="ChoremanModel.Chore" Role="Chore" Multiplicity="0..1" />
+          <End Type="ChoremanModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chore">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="ChoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Messages_ChoreUsers">
+          <End Type="ChoremanModel.ChoreUser" Role="ChoreUser" Multiplicity="0..1" />
+          <End Type="ChoremanModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChoreUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="ChoreUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -584,6 +687,24 @@
           <FunctionImportMapping FunctionImportName="Authenticate" FunctionName="ChoremanModel.Store.Authenticate" />
           <FunctionImportMapping FunctionImportName="dbo_AddUser" FunctionName="ChoremanModel.Store.dbo_AddUser" />
           <FunctionImportMapping FunctionImportName="UpdatePassword" FunctionName="ChoremanModel.Store.UpdatePassword" />
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="ChoremanModel.Message">
+              <MappingFragment StoreEntitySet="Messages">
+                <ScalarProperty Name="Sid" ColumnName="Sid" />
+                <ScalarProperty Name="IsSent" ColumnName="IsSent" />
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+                <ScalarProperty Name="ErrorLog" ColumnName="ErrorLog" />
+                <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="DateScheduled" ColumnName="DateScheduled" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="ChoreId" ColumnName="ChoreId" />
+                <ScalarProperty Name="ChoreUserId" ColumnName="ChoreUserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

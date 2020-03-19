@@ -268,7 +268,7 @@ namespace ChoreMan.Services
 
 
         //Update UserPassword
-        public User ChangePassword(string Username, string OldPassword, string NewPassword)
+        public bool ChangePassword(string Username, string OldPassword, string NewPassword)
         {
             try
             {
@@ -276,7 +276,14 @@ namespace ChoreMan.Services
                 Username = Username.ToLower();
 
                 //verify user with login;
-                User User = Login(Username, OldPassword);
+                try
+                {
+                    User User = Login(Username, OldPassword);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
 
                 //create stored procedure output variable
                 var ResponseMessage = new System.Data.Entity.Core.Objects.ObjectParameter("responseMessage", "");
@@ -293,7 +300,7 @@ namespace ChoreMan.Services
                     db.SaveChanges();
 
                     //return user
-                    return db.Users.SingleOrDefault(x => x.Id == User.Id);
+                    return true;
                 }
 
                 //if not successful, state db exception

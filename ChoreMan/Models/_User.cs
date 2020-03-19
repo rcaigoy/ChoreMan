@@ -22,6 +22,8 @@ namespace ChoreMan.Models
         public int NumberOfLoginAttempts { get; set; }
         public int AccountTypeId { get; set; }
 
+        public string AccountTypeName { get; set; }
+
         public string AuthToken { get; set; }
 
         public List<_ChoreList> ChoreLists { get; set; }
@@ -37,6 +39,8 @@ namespace ChoreMan.Models
                     config.Bind(x => x.ChoreLists, y => y.ChoreLists);
                 });
                 TinyMapper.Map<User, _User>(Value, this);
+
+                this.AccountTypeName = Value.AccountType.AccountTypeName;
             }
             catch (Exception ex)
             {

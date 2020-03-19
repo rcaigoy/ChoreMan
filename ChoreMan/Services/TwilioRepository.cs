@@ -2,7 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
+//external
+using Twilio;
+using Twilio.AspNet.Mvc;
+using Twilio.Types;
+using Twilio.TwiML;
+using Twilio.TwiML.Messaging;
+using Twilio.Rest.Api.V2010.Account;
+
+//project
 using ChoreMan.Entities;
 using ChoreMan.Services;
 using ChoreMan.Models;
@@ -223,18 +233,65 @@ namespace ChoreMan.Services
         }
 
 
+        //set schedules
+        public static bool SetSchedules(string AppToken)
+        {
+            try
+            {
+                if (AppToken == PrivateValues.AppToken)
+                {
+                    MessageRepository MessageRepository = new MessageRepository();
+                    return MessageRepository.SetSchedule();
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
         //Send all Rotations
         public static bool SendAllNotifications(string AppToken)
         {
-            if (AppToken == "c18db1132b374695804479ecc45c4b8ddceeb1f01822467e9447e6e67628ad4d0e397cca42404101affa2f76ff8f2b3130b731741b3a42f8b195dfd566b7d7da")
+            try
             {
-                using (var db = new ChoremanEntities())
+                if (AppToken == PrivateValues.AppToken)
                 {
-                    //get all chorelists
-                    //calculate 
+                    var MessageRepository = new MessageRepository();
+                    return MessageRepository.SendEmails();
                 }
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+        public static string SendMessage(_Message Message)
+        {
+            try
+            {
+                TwilioClient.Init(PrivateValues.TwilioAccountSid, PrivateValues.TwilioAuthToken);
+                var To = new PhoneNumber("+1" + Message.Phone);
+                var From = new PhoneNumber(PrivateValues.AccountPhoneNumber);
+
+                string MessageBody = "";
+
+                var TwilioMessage = MessageResource.Create(
+                    body: MessageBody,
+                    from: From,
+                    to: To
+                );
+
+                return TwilioMessage.Sid;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
         }
     }
 }

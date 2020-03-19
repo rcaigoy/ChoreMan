@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="01b674c0b39441b9a8af3dd1b58ba240" Name="Diagram1">
+      <Diagram DiagramId="01b674c0b39441b9a8af3dd1b58ba240" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="ChoremanModel.AccountType" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="ChoremanModel.ChoreList" Width="1.5" PointX="5.25" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="ChoremanModel.Chore" Width="1.5" PointX="7.5" PointY="3.375" IsExpanded="true" />
@@ -20,6 +20,9 @@
         <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_ChoreLists" ManuallyRouted="false" />
         <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_IntervalType" ManuallyRouted="false" />
         <AssociationConnector Association="ChoremanModel.FK_Session_Users" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ChoremanModel.Message" Width="1.5" PointX="12.75" PointY="5" />
+        <AssociationConnector Association="ChoremanModel.FK_Messages_Chores" />
+        <AssociationConnector Association="ChoremanModel.FK_Messages_ChoreUsers" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

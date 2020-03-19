@@ -31,7 +31,7 @@
 
 </div>
 
-<br />
+<br /><br />
 
 <div id="PasswordForm">
     <label>Current Password</label>
@@ -50,9 +50,54 @@
     <button class="Cancel">Cancel</button>
 </div>
 
+<br /><br />
 
 <div id="AccountForm">
-    <label>Current Account Type:  </label>
+    <label>Current Account Type:</label>
+    <label>@ViewBag.User.AccountTypeName</label>
+    <br />
+
+
+    <ul>
+        <li>1 Chore List</li>
+        <li>1 Schedule Rotation</li>
+        <li>Up to 5 Rotation Users</li>
+        <li>Up to 50 notifications per month</li>
+    </ul>
+    <br /><br />
+
+    <label>Upgrade to Choreman+:  $8.99/month</label>
+    <br />
+    <ul>
+        <li>Up to 3 Chore Lists</li>
+        <li>Up to 3 Schedule Rotations</li>
+        <li>Up to 10 Rotation Users</li>
+        <li>No Ads</li>
+        <li>Up to 500 notifications per month</li>
+    </ul>
+    <br /><br />
+
+
+    <label>Upgrade to Choreman Premium:  $15.99/month</label>
+    <br />
+    <ul>
+        <li>Up to 10 Chore Lists</li>
+        <li>Up to 10 Schedule Rotations</li>
+        <li>Up to 50 Users</li>
+        <li>No Ads</li>
+        <li>Up to 1000 notifications per month</li>
+    </ul>
+    <br /><br />
+
+    <label>Upgrade to Choreman Enterprise:  $19.99/month (Pay as you go)</label>
+    <br />
+    <ul>
+        <li>Unlimited Chore Lists</li>
+        <li>Unlimited Scheduled Rotations</li>
+        <li>Unlimited Users</li>
+        <li>No Ads</li>
+        <li>Messaging rates at 1cent per notification sent after 1000 notifications per month</li>
+    </ul>
     
 </div>
 
@@ -62,33 +107,37 @@
 
         //Save User Info
         $('#SaveUserInfo').on('click', function () {
-            let UserObject = {};
+            let confirm = window.confirm('Warning, changing your email or phone number will require verification.  Continue?');
 
-            $('#UserForm input').each(function () {
-                UserObject[this.name] = this.value;
-            });//end $('#UserForm input').each(function () {
+            if (confirm) {
+                let UserObject = {};
 
-            $.ajax({
-                url: '@Url.Action("UpdateUserInfo", "UsersAPI")'
-                    + '?AuthToken=' + @ViewBag.User.AuthToken
-                    + '&Id=' + @ViewBag.User.id
-                    + '&UserValues=' + escape(JSON.stringify(UserObject))
-                ,
-                type: 'POST',
-                success: function (data) {
-                    alert('Successfully changed user info');
-                    window.location.reload();
-                },
-                error: function (data) {
-                    console.log(data);
-                    alert('Error');
-                }
-            });//end $.ajax({
+                $('#UserForm input').each(function () {
+                    UserObject[this.name] = this.value;
+                });//end $('#UserForm input').each(function () {
+
+                $.ajax({
+                    url: '@Url.Action("UpdateUserInfo", "UsersAPI")'
+                        + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                        + '&Id=' + @ViewBag.User.Id
+                        + '&UserValues=' + escape(JSON.stringify(UserObject))
+                    ,
+                    type: 'POST',
+                    success: function (data) {
+                        alert('Successfully changed user info');
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('Error');
+                    }
+                });//end $.ajax({
+            }//end if (confirm){
         });//end $('#SaveUserInfo').on('click', function () {
 
 
         $('#ChangePassword').on('click', function () {
-            if (OldPassword.value && NewPassword.value && OldPassword.value == NewPassword.value) {
+            if (OldPassword.value && NewPassword.value && NewPassword.value == ConfirmPassword.value) {
                 $.ajax({
                     url: '@Url.Action("UpdateUserPassword", "UsersAPI")'
                         + '?Username=' + '@ViewBag.User.Username'
@@ -97,8 +146,13 @@
                     ,
                     type: 'POST',
                     success: function (data) {
-                        alert('Password successfully changed');
-                        window.location.reload();
+                        if (data) {
+                            alert('Password successfully changed');
+                            window.location.reload();
+                        }
+                        else {
+                            alert('Password Incorrect');
+                        }
                     },
                     error: function (data) {
                         console.log(data);

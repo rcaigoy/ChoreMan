@@ -225,6 +225,9 @@
     <Compile Include="Entities\IntervalType.cs">
       <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Message.cs">
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\RotationInterval.cs">
       <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
@@ -241,11 +244,13 @@
     <Compile Include="Models\_Chore.cs" />
     <Compile Include="Models\_ChoreList.cs" />
     <Compile Include="Models\_ChoreUser.cs" />
+    <Compile Include="Models\_Message.cs" />
     <Compile Include="Models\_RotationInterval.cs" />
     <Compile Include="Models\_User.cs" />
     <Compile Include="PrivateValues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ChoreRepository.cs" />
+    <Compile Include="Services\MessageRepository.cs" />
     <Compile Include="Services\TwilioRepository.cs" />
     <Compile Include="Services\UserRepository.cs" />
     <Compile Include="Utility.cs" />

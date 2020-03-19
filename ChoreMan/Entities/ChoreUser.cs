@@ -14,6 +14,12 @@ namespace ChoreMan.Entities
     
     public partial class ChoreUser
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ChoreUser()
+        {
+            this.Messages = new HashSet<Message>();
+        }
+    
         public int Id { get; set; }
         public int ChoreListId { get; set; }
         public string Phone { get; set; }
@@ -26,5 +32,7 @@ namespace ChoreMan.Entities
         public int SortOrder { get; set; }
     
         public virtual ChoreList ChoreList { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

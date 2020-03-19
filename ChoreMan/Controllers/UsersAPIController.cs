@@ -150,7 +150,7 @@ namespace ChoreMan.Controllers
         {
             try
             {
-                return OKResponse(new _User(UserRepository.ChangePassword(Username, OldPassword, NewPassword)));
+                return OKResponse(UserRepository.ChangePassword(Username, OldPassword, NewPassword));
             }
             catch (Exception ex)
             {
@@ -178,7 +178,7 @@ namespace ChoreMan.Controllers
 
 
         //refactored api responses
-        public HttpResponseMessage OKResponse(Object arg)
+        private HttpResponseMessage OKResponse(Object arg)
         {
             try
             {
@@ -196,7 +196,7 @@ namespace ChoreMan.Controllers
         }
 
 
-        public HttpResponseMessage ErrorResponse(Exception ex)
+        private HttpResponseMessage ErrorResponse(Exception ex)
         {
             try
             {

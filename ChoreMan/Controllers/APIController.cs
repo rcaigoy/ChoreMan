@@ -144,7 +144,6 @@ namespace ChoreMan.Controllers
         #region CHOREUSER
 
         //Create
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/addchoreuser")]
@@ -223,7 +222,6 @@ namespace ChoreMan.Controllers
         }
 
 
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/updatechoreuser")]
@@ -253,7 +251,6 @@ namespace ChoreMan.Controllers
         }
 
 
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/deletechoreuser")]
@@ -285,7 +282,6 @@ namespace ChoreMan.Controllers
         #region CHORES
 
         //Create
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/addchore")]
@@ -361,8 +357,8 @@ namespace ChoreMan.Controllers
 
 
         //Update
-        [HttpGet]
         [HttpPost]
+        [HttpOptions]
         [Route("api/updatechore")]
         public HttpResponseMessage UpdateChore(string AuthToken, int Id, string ChoreValues)
         {
@@ -391,8 +387,8 @@ namespace ChoreMan.Controllers
 
 
         //Delete
-        [HttpGet]
         [HttpPost]
+        [HttpOptions]
         [Route("api/deletechore")]
         public HttpResponseMessage DeleteChore(string AuthToken, int Id)
         {
@@ -420,7 +416,6 @@ namespace ChoreMan.Controllers
         #region ROTATIONINTERVALS
 
         //Create
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/addrotationinterval")]
@@ -491,7 +486,6 @@ namespace ChoreMan.Controllers
 
 
         //Update
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/updaterotationinterval")]
@@ -518,7 +512,6 @@ namespace ChoreMan.Controllers
 
 
         //Delete
-        [HttpGet]
         [HttpPost]
         [HttpOptions]
         [Route("api/deleterotationinterval")]
@@ -543,7 +536,7 @@ namespace ChoreMan.Controllers
 
         #endregion ROTATIONINTERVALS
 
-        public HttpResponseMessage OKResponse(Object arg)
+        private HttpResponseMessage OKResponse(Object arg)
         {
             try
             {
@@ -561,7 +554,7 @@ namespace ChoreMan.Controllers
         }
 
 
-        public HttpResponseMessage ErrorResponse(Exception ex)
+        private HttpResponseMessage ErrorResponse(Exception ex)
         {
             try
             {
