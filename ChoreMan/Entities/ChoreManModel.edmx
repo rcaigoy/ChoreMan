@@ -5,6 +5,20 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ChoremanModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AccountPayments">
+          <Key>
+            <PropertyRef Name="AccountPaymentId" />
+          </Key>
+          <Property Name="AccountPaymentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="money" />
+          <Property Name="IdempotencyKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nonce" Type="nvarchar" MaxLength="50" />
+          <Property Name="SquarePaymentId" Type="nvarchar" MaxLength="40" />
+          <Property Name="AccountTypeId" Type="int" Nullable="false" />
+          <Property Name="PaymentDate" Type="datetime" Nullable="false" />
+          <Property Name="ExpirationDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="AccountTypes">
           <Key>
             <PropertyRef Name="AccountTypeId" />
@@ -20,6 +34,7 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsSuspended" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Chores">
           <Key>
@@ -109,6 +124,18 @@
           <Property Name="NumberOfLoginAttempts" Type="int" Nullable="false" />
           <Property Name="AccountTypeId" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_AccountPayments_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="AccountPayments" Type="Self.AccountPayments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountPayments">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ChoreLists_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="ChoreLists" Type="Self.ChoreLists" Multiplicity="*" />
@@ -237,6 +264,7 @@
           <Parameter Name="responseMessage" Type="nvarchar" Mode="InOut" />
         </Function>
         <EntityContainer Name="ChoremanModelStoreContainer">
+          <EntitySet Name="AccountPayments" EntityType="Self.AccountPayments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AccountTypes" EntityType="Self.AccountTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChoreLists" EntityType="Self.ChoreLists" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
@@ -246,6 +274,10 @@
           <EntitySet Name="RotationIntervals" EntityType="Self.RotationIntervals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sessions" EntityType="Self.Sessions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AccountPayments_Users" Association="Self.FK_AccountPayments_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="AccountPayments" EntitySet="AccountPayments" />
+          </AssociationSet>
           <AssociationSet Name="FK_ChoreLists_Users" Association="Self.FK_ChoreLists_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="ChoreLists" EntitySet="ChoreLists" />
@@ -307,6 +339,7 @@
           <NavigationProperty Name="Chores" Relationship="Self.FK_Chores_ChoreLists" FromRole="ChoreLists" ToRole="Chores" />
           <NavigationProperty Name="ChoreUsers" Relationship="Self.FK_ChoreUsers_ChoreLists" FromRole="ChoreLists" ToRole="ChoreUsers" />
           <NavigationProperty Name="RotationIntervals" Relationship="Self.FK_RotationIntervals_ChoreLists" FromRole="ChoreLists" ToRole="RotationIntervals" />
+          <Property Name="IsSuspended" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Chore">
           <Key>
@@ -389,6 +422,7 @@
           <NavigationProperty Name="AccountType" Relationship="Self.FK_Users_AccountType" FromRole="Users" ToRole="AccountTypes" />
           <NavigationProperty Name="ChoreLists" Relationship="Self.FK_ChoreLists_Users" FromRole="Users" ToRole="ChoreLists" />
           <NavigationProperty Name="Sessions" Relationship="Self.FK_Session_Users" FromRole="Users" ToRole="Sessions" />
+          <NavigationProperty Name="AccountPayments" Relationship="ChoremanModel.FK_AccountPayments_Users" FromRole="User" ToRole="AccountPayment" />
         </EntityType>
         <Association Name="FK_Users_AccountType">
           <End Role="AccountTypes" Type="Self.AccountType" Multiplicity="1" />
@@ -539,6 +573,11 @@
             <End Role="ChoreUser" EntitySet="ChoreUsers" />
             <End Role="Message" EntitySet="Messages" />
           </AssociationSet>
+          <EntitySet Name="AccountPayments" EntityType="ChoremanModel.AccountPayment" />
+          <AssociationSet Name="FK_AccountPayments_Users" Association="ChoremanModel.FK_AccountPayments_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="AccountPayment" EntitySet="AccountPayments" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Message">
           <Key>
@@ -583,6 +622,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AccountPayment">
+          <Key>
+            <PropertyRef Name="AccountPaymentId" />
+          </Key>
+          <Property Name="AccountPaymentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="SquarePaymentId" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="AccountTypeId" Type="Int32" Nullable="false" />
+          <Property Name="PaymentDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ExpirationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="ChoremanModel.FK_AccountPayments_Users" FromRole="AccountPayment" ToRole="User" />
+          <Property Name="IdempotencyKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nonce" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_AccountPayments_Users">
+          <End Type="ChoremanModel.User" Role="User" Multiplicity="1" />
+          <End Type="ChoremanModel.AccountPayment" Role="AccountPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AccountPayment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -600,6 +666,7 @@
           <EntitySetMapping Name="ChoreLists">
             <EntityTypeMapping TypeName="ChoremanModel.ChoreList">
               <MappingFragment StoreEntitySet="ChoreLists">
+                <ScalarProperty Name="IsSuspended" ColumnName="IsSuspended" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -702,6 +769,21 @@
                 <ScalarProperty Name="ChoreId" ColumnName="ChoreId" />
                 <ScalarProperty Name="ChoreUserId" ColumnName="ChoreUserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountPayments">
+            <EntityTypeMapping TypeName="ChoremanModel.AccountPayment">
+              <MappingFragment StoreEntitySet="AccountPayments">
+                <ScalarProperty Name="Nonce" ColumnName="Nonce" />
+                <ScalarProperty Name="IdempotencyKey" ColumnName="IdempotencyKey" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
+                <ScalarProperty Name="SquarePaymentId" ColumnName="SquarePaymentId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="AccountPaymentId" ColumnName="AccountPaymentId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

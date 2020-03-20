@@ -233,25 +233,6 @@ namespace ChoreMan.Services
         }
 
 
-        //set schedules
-        public static bool SetSchedules(string AppToken)
-        {
-            try
-            {
-                if (AppToken == PrivateValues.AppToken)
-                {
-                    MessageRepository MessageRepository = new MessageRepository();
-                    return MessageRepository.SetSchedule();
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                throw Utility.ThrowException(ex);
-            }
-        }
-
-
         //Send all Rotations
         public static bool SendAllNotifications(string AppToken)
         {
@@ -260,7 +241,7 @@ namespace ChoreMan.Services
                 if (AppToken == PrivateValues.AppToken)
                 {
                     var MessageRepository = new MessageRepository();
-                    return MessageRepository.SendEmails();
+                    return MessageRepository.SendEmails(AppToken);
                 }
                 return false;
             }

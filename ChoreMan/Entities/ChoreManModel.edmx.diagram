@@ -23,6 +23,8 @@
         <EntityTypeShape EntityType="ChoremanModel.Message" Width="1.5" PointX="12.75" PointY="5" />
         <AssociationConnector Association="ChoremanModel.FK_Messages_Chores" />
         <AssociationConnector Association="ChoremanModel.FK_Messages_ChoreUsers" />
+        <EntityTypeShape EntityType="ChoremanModel.AccountPayment" Width="1.5" PointX="0.75" PointY="0.75" />
+        <AssociationConnector Association="ChoremanModel.FK_AccountPayments_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

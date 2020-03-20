@@ -19,8 +19,12 @@ namespace ChoreMan.Services
 
 
         //Decide next 24 hours which messages should be sent
-        public bool SetSchedule()
+        public bool SetSchedule(string AppToken)
         {
+            if (AppToken != PrivateValues.AppToken)
+                throw new Exception("Unauthorized");
+
+
             string ErrorHelper = string.Empty;
             try
             {
@@ -146,10 +150,13 @@ namespace ChoreMan.Services
         }
 
 
-        public bool SendEmails()
+        public bool SendEmails(string AppToken)
         {
             try
             {
+                if (AppToken != PrivateValues.AppToken)
+                    throw new Exception("Unauthorized");
+
                 //combine in database each Message with chore user and chore information
                 var MessageQuery = (from Message in db.Messages
                                     join Chore in db.Chores

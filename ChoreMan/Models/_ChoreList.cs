@@ -15,8 +15,7 @@ namespace ChoreMan.Models
         public string Name { get; set; }
         public int UserId { get; set; }
         public bool IsActive { get; set; }
-        public int ChoreListTypeId { get; set; }
-        public string ChoreListTypeName { get; set; }
+        public bool IsSuspended { get; set; }
 
         public List<_ChoreUser> ChoreUsers { get; set; }
         public List<_Chore> Chores { get; set; }

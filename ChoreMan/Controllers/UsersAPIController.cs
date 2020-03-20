@@ -26,6 +26,7 @@ namespace ChoreMan.Controllers
     {
         private UserRepository UserRepository;
         private ChoreRepository ChoreRepository;
+        private AccountPaymentsRepository AccountPaymentsRepository;
 
         public UsersAPIController()
         {
@@ -33,6 +34,7 @@ namespace ChoreMan.Controllers
             {
                 this.UserRepository = new UserRepository();
                 this.ChoreRepository = new ChoreRepository();
+                this.AccountPaymentsRepository = new AccountPaymentsRepository();
             }
             catch (Exception ex)
             {
@@ -151,6 +153,51 @@ namespace ChoreMan.Controllers
             try
             {
                 return OKResponse(UserRepository.ChangePassword(Username, OldPassword, NewPassword));
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponse(ex);
+            }
+        }
+
+
+        [HttpPost]
+        [HttpOptions]
+        [Route("usersapi/submitaccountpayment")]
+        public HttpResponseMessage SubmitAccountPayment(string AuthToken, int UserId, int AccountTypeId, decimal Amount, string Nonce, string DiscountCode = null)
+        {
+            try
+            {
+                //authenticate user
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                if (UserId != User.Id)
+                    throw new Exception("Unauthorized");
+
+                if (!AccountPaymentsRepository.VerifyAmount(AccountTypeId, Amount, DiscountCode))
+                    throw new Exception("Amount not verified");
+                
+                //create new account payment entity
+                AccountPayment AccountPayment = new AccountPayment();
+                AccountPayment.UserId = UserId;
+                AccountPayment.Amount = Amount;
+                AccountPayment.IdempotencyKey = Guid.NewGuid().ToString();
+                AccountPayment.Nonce = Nonce;
+
+                //bill
+                AccountPayment.SquarePaymentId = Payments.Bill(AccountPayment.IdempotencyKey, Nonce, (long)Amount*100);
+
+                //successful billing
+                AccountPayment.PaymentDate = DateTime.Now;
+                AccountPayment.ExpirationDate = DateTime.Today.AddMonths(1).AddDays(1);
+
+                //add to database
+                AccountPaymentsRepository.AddAccountPayment(AccountPayment);
+
+                //change account type
+                UserRepository.ChangeAccountType(UserId, AccountTypeId);
+
+                return OKResponse(true);
             }
             catch (Exception ex)
             {

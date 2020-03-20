@@ -149,32 +149,5 @@ namespace ChoreMan.Controllers
             }
         }
 
-
-        [HttpPost]
-        public bool SetSchedule(string AppToken)
-        {
-            try
-            {
-                return TwilioRepository.SetSchedules(AppToken);
-            }
-            catch (Exception ex)
-            {
-                throw Utility.ThrowException(ex);
-            }
-        }
-
-
-        [HttpPost]
-        public bool SendNotifications(string AppToken)
-        {
-            try
-            {
-                return TwilioRepository.SendAllNotifications(AppToken);
-            }
-            catch (Exception ex)
-            {
-                throw Utility.ThrowException(ex);
-            }
-        }
     }
 }
