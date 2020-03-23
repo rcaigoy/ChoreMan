@@ -25,10 +25,11 @@ Current Status:  @ViewBag.ChoreList.ChoreListStatusName
 <div id="SaveForm">
 </div>
 <div id="ChoreListForm">
+    <label>Name:</label>
     <input type="text" value="@ViewBag.ChoreList.Name" id="ChoreListName" />
     <br />
 
-    <label>Set Active</label>
+    <label>Set Active: </label>
     <input type="checkbox" @if (ViewBag.Chorelist.StatusId == 1) { WriteLiteral("checked"); } id="ChoreListCheckbox"/>
     <br />
 

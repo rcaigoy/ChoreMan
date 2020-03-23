@@ -12,11 +12,20 @@ namespace ChoreMan.Controllers
 {
     public class HomeController : Controller
     {
+        private UserRepository UserRepository;
+        public HomeController()
+        {
+            this.UserRepository = new UserRepository();
+        }
+
         public ActionResult Index()
         {
             if (Session["User"] != null)
             {
-                ViewBag.User = (_User)Session["User"];
+                var User = (_User)Session["User"];
+                User = new _User(UserRepository.RefreshAuthToken(User.AuthToken));
+                Session["User"] = User;
+                ViewBag.User = User;
                 return View();
             }
 

@@ -17,9 +17,11 @@ namespace ChoreMan.Controllers
     public class AccountController : Controller
     {
         private AccountPaymentsRepository AccountPaymentsRepository;
+        private UserRepository UserRepository;
         public AccountController()
         {
             this.AccountPaymentsRepository = new AccountPaymentsRepository();
+            this.UserRepository = new UserRepository();
         }
         // GET: Account
         public ActionResult Index()
@@ -38,9 +40,11 @@ namespace ChoreMan.Controllers
             //return to login/register if not signed in
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Register");
-            
+
             //get user infor
-            ViewBag.User = (_User)Session["User"];
+            var User = new _User(UserRepository.RefreshAuthToken(((_User)Session["User"]).AuthToken));
+            Session["User"] = User;
+            ViewBag.User = User;
             ViewBag.AccountType = AccountPaymentsRepository.GetAccountType(AccountTypeId);
 
             //get account types

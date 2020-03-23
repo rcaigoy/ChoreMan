@@ -40,7 +40,8 @@ namespace ChoreMan.Controllers
         {
             try
             {
-                Session["User"] = new _User(UserRepository.Login(Username, Password));
+                var User = new _User(UserRepository.Login(Username, Password));
+                Session["User"] = User;
                 return Json(new { LoggedIn = true});
             }
             catch (Exception ex)

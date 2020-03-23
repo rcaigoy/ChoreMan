@@ -14,10 +14,12 @@ namespace ChoreMan.Controllers
     public class ChoresController : Controller
     {
         private ChoreRepository ChoreRepository;
+        private UserRepository UserRepository;
 
         public ChoresController()
         {
             this.ChoreRepository = new ChoreRepository();
+            this.UserRepository = new UserRepository();
         }
 
         // GET: Chores
@@ -26,7 +28,9 @@ namespace ChoreMan.Controllers
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Register");
 
-            ViewBag.User = (_User)Session["User"];
+            var User = new _User(UserRepository.RefreshAuthToken(((_User)Session["User"]).AuthToken));
+            Session["User"] = User;
+            ViewBag.User = User;
 
             return View();
         }
@@ -37,7 +41,9 @@ namespace ChoreMan.Controllers
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Register");
 
-            ViewBag.User = (_User)Session["User"];
+            var User = new _User(UserRepository.RefreshAuthToken(((_User)Session["User"]).AuthToken));
+            Session["User"] = User;
+            ViewBag.User = User;
 
             return View();
         }
@@ -48,7 +54,10 @@ namespace ChoreMan.Controllers
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Register");
 
-            _User User = (_User)Session["User"];
+            var User = (_User)Session["User"];
+            User = new _User(UserRepository.RefreshAuthToken(User.AuthToken));
+            Session["User"] = User;
+            ViewBag.User = User;
 
             if (!ChoreRepository.CanEditChoreList(User.Id, Id))
                 throw new Exception("Unauthorized to edit chorelist");

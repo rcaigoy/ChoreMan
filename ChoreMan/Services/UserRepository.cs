@@ -118,7 +118,7 @@ namespace ChoreMan.Services
                 session.RefreshToken = session.BearerToken;
 
                 //expire in 24 hours?
-                session.ExpirationDate = DateTime.Now.AddDays(1);
+                session.ExpirationDate = DateTime.Now.AddHours(1);
 
                 //add and save to db
                 if (session.SessionId == 0)
@@ -147,8 +147,12 @@ namespace ChoreMan.Services
                 if (DateTime.Now > session.ExpirationDate)
                     throw new Exception("Authorization Expired");
 
-                //update expiratin date
-                session.ExpirationDate = DateTime.Now.AddDays(1);
+                //update expiration date
+                session.ExpirationDate = DateTime.Now.AddHours(1);
+
+                //maintain auth token
+                session.User.AuthToken = AuthToken;
+
                 db.SaveChanges();
 
                 return session.User;

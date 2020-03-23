@@ -39,8 +39,8 @@ namespace ChoreMan.Models
             });
 
             TinyMapper.Map<ChoreList, _ChoreList>(Value, this);
-
-            ChoreListStatusName = Value.ChoreListStatu.ChoreListStatusName;
+            if (Value.ChoreListStatu != null)
+                ChoreListStatusName = Value.ChoreListStatu.ChoreListStatusName;
 
         }
     }

@@ -16,6 +16,9 @@ namespace ChoreMan.Models
         public int AccountTypeId { get; set; }
         public string AccountTypeName { get; set; }
         public decimal BasePricePerMonth { get; set; }
+        public int UserLimit { get; set; }
+        public int ChoreListLimit { get; set;}
+        public int RotationLimit { get; set; }
 
         public _AccountType() { }
 

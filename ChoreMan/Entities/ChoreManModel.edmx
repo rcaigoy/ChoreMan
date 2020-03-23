@@ -26,6 +26,9 @@
           <Property Name="AccountTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AccountTypeName" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="BasePricePerMonth" Type="money" Nullable="false" />
+          <Property Name="UserLimit" Type="int" />
+          <Property Name="ChoreListLimit" Type="int" />
+          <Property Name="RotationLimit" Type="int" />
         </EntityType>
         <EntityType Name="ChoreLists">
           <Key>
@@ -464,6 +467,9 @@
           <Property Name="AccountTypeName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="BasePricePerMonth" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <NavigationProperty Name="Users" Relationship="ChoremanModel.FK_Users_AccountType" FromRole="AccountType" ToRole="User" />
+          <Property Name="UserLimit" Type="Int32" />
+          <Property Name="ChoreListLimit" Type="Int32" />
+          <Property Name="RotationLimit" Type="Int32" />
         </EntityType>
         <EntityType Name="ChoreList">
           <Key>
@@ -764,6 +770,9 @@
           <EntitySetMapping Name="AccountTypes">
             <EntityTypeMapping TypeName="ChoremanModel.AccountType">
               <MappingFragment StoreEntitySet="AccountTypes">
+                <ScalarProperty Name="RotationLimit" ColumnName="RotationLimit" />
+                <ScalarProperty Name="ChoreListLimit" ColumnName="ChoreListLimit" />
+                <ScalarProperty Name="UserLimit" ColumnName="UserLimit" />
                 <ScalarProperty Name="BasePricePerMonth" ColumnName="BasePricePerMonth" />
                 <ScalarProperty Name="AccountTypeName" ColumnName="AccountTypeName" />
                 <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />

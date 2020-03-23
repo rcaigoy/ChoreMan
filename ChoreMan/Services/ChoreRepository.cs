@@ -93,18 +93,19 @@ namespace ChoreMan.Services
 
                 OldChoreList.Name = NewChoreList.Name;
 
-                //check if chorelist is in ruleset
-                if (NewChoreList.StatusId == 1)
+                //save changes to before setting active
+                db.SaveChanges();
+
+                OldChoreList.StatusId = NewChoreList.StatusId;
+                if (ChoreListIsValid(Id))
                 {
-                    if (ChoreListIsValid(Id))
-                        OldChoreList.StatusId = NewChoreList.StatusId;
+                    db.SaveChanges();
                 }
                 else
                 {
-                    OldChoreList.StatusId = NewChoreList.StatusId;
+                    OldChoreList.StatusId = 2;
+                    db.SaveChanges();
                 }
-
-
 
                 db.SaveChanges();
 
@@ -136,31 +137,24 @@ namespace ChoreMan.Services
                 int NumChoreLists = User.ChoreLists.Count(x => x.StatusId == 1);
 
                 //get number of usrs
-                int NumUsers = ChoreList.ChoreUsers.Count;
+                int NumUsers = ChoreList.ChoreUsers.Count(x => x.IsActive);
 
                 //get number of rotations
-                int NumRotations = ChoreList.RotationIntervals.Count;
+                int NumRotations = ChoreList.RotationIntervals.Count(x => x.IsActive);
 
-                //if type is 3
-                if (User.AccountTypeId == 3)
-                {
-                    if (NumUsers > 50 || NumRotations > 10 || NumChoreLists > 10)
-                        return false;
-                }
+                var AccountType = User.AccountType;
 
-                //if type is 2
-                if (User.AccountTypeId == 2)
-                {
-                    if (NumUsers > 10 || NumRotations > 3 || NumChoreLists > 3)
-                        return false;
-                }
+                //if user limit invalid
+                if (AccountType.UserLimit != null && NumUsers > AccountType.UserLimit)
+                    return false;
 
-                //if type is 1
-                if (User.AccountTypeId == 1)
-                {
-                    if (NumUsers > 5 || NumRotations > 1 || NumChoreLists > 1)
-                        return false;
-                }
+                //if number of chore lists invalid
+                if (AccountType.ChoreListLimit != null && NumChoreLists > AccountType.ChoreListLimit)
+                    return false;
+
+                //if number of rotations invalid
+                if (AccountType.RotationLimit != null && NumRotations > AccountType.RotationLimit)
+                    return false;
 
                 return true;
             }
@@ -186,52 +180,21 @@ namespace ChoreMan.Services
                 int NumChoreLists = User.ChoreLists.Count(x => x.StatusId == 1);
 
                 //get number of usrs
-                int NumUsers = ChoreList.ChoreUsers.Count;
+                int NumUsers = ChoreList.ChoreUsers.Count(x => x.IsActive);
 
                 //get number of rotations
-                int NumRotations = ChoreList.RotationIntervals.Count;
+                int NumRotations = ChoreList.RotationIntervals.Count(x => x.IsActive);
 
-                //if type is 3
-                if (User.AccountTypeId == 3)
-                {
-                    if (NumUsers > 50)
-                        to_return.Add("Too many users in chore list.  Limit 50 for this account type");
+                var AccountType = User.AccountType;
 
-                    if (NumRotations > 10)
-                        to_return.Add("Too many active schedule rotations.  Limit 10 for this account type");
+                if ( AccountType.UserLimit != null && NumUsers > AccountType.UserLimit)
+                    to_return.Add("Too many users in chore list.  Limit " + AccountType.UserLimit + " for this account type");
 
-                    if (NumChoreLists > 10)
-                        to_return.Add("Too many active chore lists.  Limit 10 for this account type");
+                if (AccountType.ChoreListLimit != null && NumChoreLists >= AccountType.ChoreListLimit)
+                    to_return.Add("Too many active chore lists.  Limit " + AccountType.ChoreListLimit + " for this account type");
 
-                }
-
-                //if type is 2
-                if (User.AccountTypeId == 2)
-                {
-                    if (NumUsers > 10)
-                        to_return.Add("Too many users in chore list.  Limit 10 for this account type");
-
-                    if (NumRotations > 3)
-                        to_return.Add("Too many active schedule rotations.  Limit 3 for this account type");
-
-                    if (NumChoreLists > 3)
-                        to_return.Add("Too many active chore lists.  Limit 3 for this account type");
-
-                }
-
-                //if type is 1
-                if (User.AccountTypeId == 1)
-                {
-                    if (NumUsers > 5)
-                        to_return.Add("Too many users in chore list.  Limit 5 for this account type");
-
-                    if (NumRotations > 1)
-                        to_return.Add("Too many active schedule rotations.  Limit 1 for this account type");
-
-                    if (NumChoreLists > 1)
-                        to_return.Add("Too many active chore lists.  Limit 1 for this account type");
-
-                }
+                if (AccountType.RotationLimit != null && NumRotations > AccountType.RotationLimit)
+                    to_return.Add("Too many active schedule rotations.  Limit " + AccountType.RotationLimit + " for this account type");
 
                 //if no valid reasons
                 if (to_return.Count == 0)
