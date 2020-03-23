@@ -34,6 +34,7 @@ namespace ChoreMan.Controllers
             this.PaymentsRepository = new AccountPaymentsRepository();
         }
 
+        [HttpGet]
         [HttpPost]
         [Route("app/setschedule")]
         public HttpResponseMessage SetSchedule(string AppToken)
@@ -41,6 +42,22 @@ namespace ChoreMan.Controllers
             try
             {
                 return OKResponse(MessageRepository.SetSchedule(AppToken));
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponse(ex);
+            }
+        }
+
+
+        [HttpGet]
+        [HttpPost]
+        [Route("app/checkmessagecounts")]
+        public HttpResponseMessage CheckMessageCounts(string AppToken)
+        {
+            try
+            {
+                return OKResponse(MessageRepository.CheckMessageCounts(AppToken));
             }
             catch (Exception ex)
             {

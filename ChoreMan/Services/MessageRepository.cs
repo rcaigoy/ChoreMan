@@ -28,8 +28,21 @@ namespace ChoreMan.Services
             string ErrorHelper = string.Empty;
             try
             {
+
+                var RotationsStatic = (from Rotation in db.RotationIntervals
+                                            join ChoreList in db.ChoreLists
+                                            on Rotation.ChoreListId equals ChoreList.Id
+                                            where
+                                                ChoreList.StatusId == 1
+                                                &&
+                                                Rotation.IsActive
+                                                &&
+                                                Rotation.StartDate > DateTime.Today
+                                            select Rotation
+                                            ).ToList();
+
                 //get rotations from db
-                var RotationsStatic = db.RotationIntervals.Where(x => x.IsActive && x.StartDate > DateTime.Today);
+                //var RotationsStatic = db.RotationIntervals.Where(x => x.IsActive && x.StartDate > DateTime.Today);
 
                 //get all active rotations
                 foreach (var Rotation in RotationsStatic)
@@ -142,6 +155,75 @@ namespace ChoreMan.Services
                 }
 
                 db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        public bool CheckMessageCounts(string AppToken)
+        {
+            try
+            {
+                if (AppToken != PrivateValues.AppToken)
+                    throw new Exception("Unauthorized");
+
+                //get each active user
+                foreach (var User in db.Users.Where(x => x.IsActive))
+                {
+                    //if account type 1 and over 30 messages
+                    if (User.AccountTypeId == 1 && CheckMonthTotal(User.Id) > 30)
+                        User.CanEditMessages = false;
+
+                    //if account type 2 and over 500 messages
+                    else if (User.AccountTypeId == 2 && CheckMonthTotal(User.Id) > 500)
+                        User.CanEditMessages = false;
+
+                    //if account type 3 and over 1000 messages
+                    else if (User.AccountTypeId == 3 && CheckMonthTotal(User.Id) > 1000)
+                        User.CanEditMessages = false;
+                    
+                    else
+                        User.CanEditMessages = true;
+                }
+
+                db.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        private int CheckMonthTotal(int UserId)
+        {
+            try
+            {
+                DateTime LastResetDate = new DateTime();
+
+                //get reset date
+                var LastAccountPayment = db.AccountPayments.Where(x => x.UserId == UserId && x.PaymentDate < DateTime.Today).FirstOrDefault();
+                
+                if (LastAccountPayment == null)
+                {
+                    LastResetDate = LastAccountPayment.PaymentDate;
+                }
+                else
+                {
+                    var User = db.Users.FirstOrDefault(x => x.Id == UserId);
+                    LastResetDate = User.DateRegistered;
+                    while(LastResetDate.AddMonths(1) > DateTime.Today)
+                    {
+                        LastResetDate = LastResetDate.AddMonths(1);
+                    }
+                }
+
+                return db.Messages.Count(x => x.IsSent && x.DateSent > LastResetDate);
             }
             catch (Exception ex)
             {

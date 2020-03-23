@@ -67,9 +67,13 @@ namespace ChoreMan.Services
 
                 if (result == "Success")
                 {
-                    db.SaveChanges();
-
                     Value = db.Users.SingleOrDefault(x => x.Username == Value.Username);
+
+                    //edit caneditmessages and dateregistered
+                    Value.CanEditMessages = true;
+                    Value.DateRegistered = DateTime.Now;
+
+                    db.SaveChanges();
 
                     //create auth token
                     Value = CreateAuthToken(Value);

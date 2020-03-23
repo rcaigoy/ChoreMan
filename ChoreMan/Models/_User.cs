@@ -21,6 +21,8 @@ namespace ChoreMan.Models
         public bool IsActive { get; set; }
         public int NumberOfLoginAttempts { get; set; }
         public int AccountTypeId { get; set; }
+        public bool CanEditMessages { get; set; }
+        public DateTime DateRegistered { get; set; }
 
         public string AccountTypeName { get; set; }
 

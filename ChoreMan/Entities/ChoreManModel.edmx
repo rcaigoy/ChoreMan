@@ -130,6 +130,8 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="NumberOfLoginAttempts" Type="int" Nullable="false" />
           <Property Name="AccountTypeId" Type="int" Nullable="false" />
+          <Property Name="CanEditMessages" Type="bit" Nullable="false" />
+          <Property Name="DateRegistered" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_AccountPayments_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
@@ -588,6 +590,8 @@
           <NavigationProperty Name="AccountType" Relationship="ChoremanModel.FK_Users_AccountType" FromRole="User" ToRole="AccountType" />
           <NavigationProperty Name="Sessions" Relationship="ChoremanModel.FK_Session_Users" FromRole="User" ToRole="Session" />
           <NavigationProperty Name="ChoreLists" Relationship="ChoremanModel.FK_ChoreLists_Users1" FromRole="User" ToRole="ChoreList" />
+          <Property Name="CanEditMessages" Type="Boolean" Nullable="false" />
+          <Property Name="DateRegistered" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_AccountPayments_Users">
           <End Type="ChoremanModel.User" Role="User" Multiplicity="1" />
@@ -864,6 +868,8 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="ChoremanModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="DateRegistered" ColumnName="DateRegistered" />
+                <ScalarProperty Name="CanEditMessages" ColumnName="CanEditMessages" />
                 <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
                 <ScalarProperty Name="NumberOfLoginAttempts" ColumnName="NumberOfLoginAttempts" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />

@@ -34,6 +34,8 @@ namespace ChoreMan.Entities
         public bool IsActive { get; set; }
         public int NumberOfLoginAttempts { get; set; }
         public int AccountTypeId { get; set; }
+        public bool CanEditMessages { get; set; }
+        public System.DateTime DateRegistered { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountPayment> AccountPayments { get; set; }
