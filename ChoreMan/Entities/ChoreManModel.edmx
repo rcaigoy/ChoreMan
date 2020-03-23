@@ -25,6 +25,7 @@
           </Key>
           <Property Name="AccountTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AccountTypeName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="BasePricePerMonth" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="ChoreLists">
           <Key>
@@ -326,6 +327,7 @@
           <Property Name="AccountTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AccountTypeName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Users_AccountType" FromRole="AccountTypes" ToRole="Users" />
+          <Property Name="BasePricePerMonth" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
         </EntityType>
         <EntityType Name="ChoreList">
           <Key>
@@ -658,6 +660,7 @@
           <EntitySetMapping Name="AccountTypes">
             <EntityTypeMapping TypeName="ChoremanModel.AccountType">
               <MappingFragment StoreEntitySet="AccountTypes">
+                <ScalarProperty Name="BasePricePerMonth" ColumnName="BasePricePerMonth" />
                 <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
                 <ScalarProperty Name="AccountTypeName" ColumnName="AccountTypeName" />
               </MappingFragment>

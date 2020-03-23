@@ -22,6 +22,7 @@ namespace ChoreMan.Entities
     
         public int AccountTypeId { get; set; }
         public string AccountTypeName { get; set; }
+        public decimal BasePricePerMonth { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }

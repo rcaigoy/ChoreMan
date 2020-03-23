@@ -58,46 +58,56 @@
     <br />
 
 
-    <ul>
-        <li>1 Chore List</li>
-        <li>1 Schedule Rotation</li>
-        <li>Up to 5 Rotation Users</li>
-        <li>Up to 50 notifications per month</li>
-    </ul>
+    <div class="UpgradeLink">
+        <ul>
+            <li>1 Chore List</li>
+            <li>1 Schedule Rotation</li>
+            <li>Up to 5 Rotation Users</li>
+            <li>Up to 30 notifications per month</li>
+        </ul>
+    </div>
+
     <br /><br />
 
-    <label>Upgrade to Choreman+:  $8.99/month</label>
-    <br />
-    <ul>
-        <li>Up to 3 Chore Lists</li>
-        <li>Up to 3 Schedule Rotations</li>
-        <li>Up to 10 Rotation Users</li>
-        <li>No Ads</li>
-        <li>Up to 500 notifications per month</li>
-    </ul>
+    <div class="UpgradeLink" name="2">
+        <label>Upgrade to Choreman+:  $8.99/month</label>
+        <br />
+        <ul>
+            <li>Up to 3 Chore Lists</li>
+            <li>Up to 3 Schedule Rotations</li>
+            <li>Up to 10 Rotation Users</li>
+            <li>No Ads</li>
+            <li>Up to 500 notifications per month</li>
+        </ul>
+    </div>
+
     <br /><br />
 
+    <div class="UpgradeLink" name="3">
+        <label>Upgrade to Choreman Premium:  $15.99/month</label>
+        <br />
+        <ul>
+            <li>Up to 10 Chore Lists</li>
+            <li>Up to 10 Schedule Rotations</li>
+            <li>Up to 50 Users</li>
+            <li>No Ads</li>
+            <li>Up to 1000 notifications per month</li>
+        </ul>
+    </div>
 
-    <label>Upgrade to Choreman Premium:  $15.99/month</label>
-    <br />
-    <ul>
-        <li>Up to 10 Chore Lists</li>
-        <li>Up to 10 Schedule Rotations</li>
-        <li>Up to 50 Users</li>
-        <li>No Ads</li>
-        <li>Up to 1000 notifications per month</li>
-    </ul>
     <br /><br />
 
-    <label>Upgrade to Choreman Enterprise:  $19.99/month (Pay as you go)</label>
-    <br />
-    <ul>
-        <li>Unlimited Chore Lists</li>
-        <li>Unlimited Scheduled Rotations</li>
-        <li>Unlimited Users</li>
-        <li>No Ads</li>
-        <li>Messaging rates at 1cent per notification sent after 1000 notifications per month</li>
-    </ul>
+    <div class="UpgradeLink" name="4">
+        <label>Upgrade to Choreman Enterprise:  $19.99/month (Pay as you go)</label>
+        <br />
+        <ul>
+            <li>Unlimited Chore Lists</li>
+            <li>Unlimited Scheduled Rotations</li>
+            <li>Unlimited Users</li>
+            <li>No Ads</li>
+            <li>Messaging rates at 1cent per notification sent after 1000 notifications per month</li>
+        </ul>
+    </div>
     
 </div>
 
@@ -166,6 +176,9 @@
         });//end $('#ChangePassword').on('click', function () {
 
 
+        $('.UpgradeLink').on('click', function (data) {
+            window.location.href = '@Url.Action("Upgrade", "Account")?Id=' + data.currentTarget.attributes.name.value; 
+        });//end $('.UpgradeLink').on('click', function () {
 
 
     });//end $(document).ready(function () {

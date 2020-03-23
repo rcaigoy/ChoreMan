@@ -6,6 +6,17 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <!-- link to the SqPaymentForm library -->
+    <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+
+    <!-- link to the local SqPaymentForm initialization -->
+    <script type="text/javascript" src="mysqpaymentform.js"></script>
+
+    <!-- link to the local custom styles for SqPaymentForm -->
+    <link rel="stylesheet" type="text/css" href="mysqpaymentform.css">
+
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">

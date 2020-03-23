@@ -143,6 +143,22 @@ namespace ChoreMan.Controllers
 
         #region CHOREUSER
 
+
+        [HttpGet]
+        [Route("testnonce")]
+        public HttpResponseMessage TestNonce(string Nonce)
+        {
+            try
+            {
+                return OKResponse(Payments.Bill(Guid.NewGuid().ToString(), Nonce, 200));
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponse(ex);
+            }
+        }
+
+
         //Create
         [HttpPost]
         [HttpOptions]

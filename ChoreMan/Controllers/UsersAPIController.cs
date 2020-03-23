@@ -164,7 +164,7 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("usersapi/submitaccountpayment")]
-        public HttpResponseMessage SubmitAccountPayment(string AuthToken, int UserId, int AccountTypeId, decimal Amount, string Nonce, string DiscountCode = null)
+        public HttpResponseMessage SubmitAccountPayment(string AuthToken, int UserId, int AccountTypeId, string Nonce, string DiscountCode = null)
         {
             try
             {
@@ -174,8 +174,7 @@ namespace ChoreMan.Controllers
                 if (UserId != User.Id)
                     throw new Exception("Unauthorized");
 
-                if (!AccountPaymentsRepository.VerifyAmount(AccountTypeId, Amount, DiscountCode))
-                    throw new Exception("Amount not verified");
+                decimal Amount = AccountPaymentsRepository.GetAmount(AccountTypeId, DiscountCode);
                 
                 //create new account payment entity
                 AccountPayment AccountPayment = new AccountPayment();
@@ -189,7 +188,9 @@ namespace ChoreMan.Controllers
 
                 //successful billing
                 AccountPayment.PaymentDate = DateTime.Now;
-                AccountPayment.ExpirationDate = DateTime.Today.AddMonths(1).AddDays(1);
+
+                //set expiratin date
+                //AccountPayment.ExpirationDate = DateTime.Today.AddMonths(1).AddDays(1);
 
                 //add to database
                 AccountPaymentsRepository.AddAccountPayment(AccountPayment);
@@ -216,6 +217,23 @@ namespace ChoreMan.Controllers
             try
             {
                 return OKResponse(new _User(UserRepository.DeleteUser(Id)));
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponse(ex);
+            }
+        }
+
+
+        //Account Type single
+        [HttpGet]
+        [HttpOptions]
+        [Route("usersapi/getaccounttype")]
+        public HttpResponseMessage GetAccountType(int AccountTypeId)
+        {
+            try
+            {
+                return OKResponse(AccountPaymentsRepository.GetAccountType(AccountTypeId));
             }
             catch (Exception ex)
             {

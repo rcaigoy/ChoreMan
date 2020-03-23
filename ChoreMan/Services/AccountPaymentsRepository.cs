@@ -78,30 +78,11 @@ namespace ChoreMan.Services
         }
 
 
-        public bool VerifyAmount(int AccountTypeId, decimal Amount, string DiscountCode)
+        public decimal GetAmount(int AccountTypeId, string DiscountCode)
         {
             try
             {
-                if (AccountTypeId == 1)
-                    throw new Exception("Account type free");
-
-                if (AccountTypeId == 2 && Amount > 8)
-                    return true;
-
-                if (AccountTypeId == 3 && Amount > 15)
-                    return true;
-
-                if (AccountTypeId == 4 && Amount > 19)
-                    return true;
-
-                //if discount code
-                if (!string.IsNullOrEmpty(DiscountCode))
-                {
-                    //will implement later
-                }
-
-                //Amount not verified
-                return false;
+                return db.AccountTypes.FirstOrDefault(x => x.AccountTypeId == AccountTypeId).BasePricePerMonth;
             }
             catch (Exception ex)
             {
@@ -114,10 +95,50 @@ namespace ChoreMan.Services
         {
             try
             {
+                //get latest account payment expiration
+                var LatestAccountPayment = db.AccountPayments.Where(x => x.UserId == Value.UserId).OrderByDescending(x => x.ExpirationDate).FirstOrDefault();
+
+                //set expiration date based on user
+                if (LatestAccountPayment != null && LatestAccountPayment.ExpirationDate > DateTime.Now)
+                {
+                    Value.ExpirationDate = LatestAccountPayment.ExpirationDate.AddMonths(1);
+                }
+                else
+                {
+                    //if latestaccount payment doesn't exist
+                    Value.ExpirationDate = DateTime.Now.AddMonths(1);
+                }
+
                 db.AccountPayments.Add(Value);
                 db.SaveChanges();
 
                 return Value;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        public AccountType GetAccountType(int AccountTypeId)
+        {
+            try
+            {
+                return db.AccountTypes.FirstOrDefault(x => x.AccountTypeId == AccountTypeId);
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        public List<AccountType> GetAccountTypes()
+        {
+            try
+            {
+                return db.AccountTypes.ToList();
             }
             catch (Exception ex)
             {

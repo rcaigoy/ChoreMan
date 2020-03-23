@@ -254,6 +254,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\_AccountType.cs" />
     <Compile Include="Models\_Chore.cs" />
     <Compile Include="Models\_ChoreList.cs" />
     <Compile Include="Models\_ChoreUser.cs" />
@@ -323,6 +324,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="server.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -344,6 +346,7 @@
     <Content Include="Views\Chores\EditChoreList.cshtml" />
     <Content Include="Views\Chores\CreateChoreList.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Upgrade.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
