@@ -42,9 +42,9 @@ namespace ChoreMan.Services
                     if (false)
                     {
                         var CurrentUser = db.Users.SingleOrDefault(x => x.Id == AccountPayment.UserId);
-                        foreach (var ChoreList in CurrentUser.ChoreLists.Where(x => x.IsActive))
+                        foreach (var ChoreList in CurrentUser.ChoreLists.Where(x => x.StatusId == 1))
                         {
-                            ChoreList.IsSuspended = true;
+                            ChoreList.StatusId = 2;
                         }
                     }
                 }
@@ -60,9 +60,9 @@ namespace ChoreMan.Services
                     if (AccountPayments.Count(x => x.UserId == User.Id) == 0)
                     {
                         //set each chorelist to suspended
-                        foreach (var ChoreList in User.ChoreLists.Where(x => x.IsActive))
+                        foreach (var ChoreList in User.ChoreLists.Where(x => x.StatusId == 1))
                         {
-                            ChoreList.IsSuspended = true;
+                            ChoreList.StatusId = 2;
                         }
                     }
                 }

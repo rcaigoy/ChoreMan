@@ -21,11 +21,11 @@ namespace ChoreMan.Entities
         public string Email { get; set; }
         public System.DateTime DateScheduled { get; set; }
         public Nullable<System.DateTime> DateSent { get; set; }
-        public bool IsComplete { get; set; }
-        public string ErrorLog { get; set; }
         public bool IsVerified { get; set; }
         public bool IsSent { get; set; }
+        public bool IsComplete { get; set; }
         public string Sid { get; set; }
+        public string ErrorLog { get; set; }
     
         public virtual Chore Chore { get; set; }
         public virtual ChoreUser ChoreUser { get; set; }

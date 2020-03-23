@@ -17,12 +17,12 @@ namespace ChoreMan.Entities
         public int AccountPaymentId { get; set; }
         public int UserId { get; set; }
         public Nullable<decimal> Amount { get; set; }
+        public string IdempotencyKey { get; set; }
+        public string Nonce { get; set; }
         public string SquarePaymentId { get; set; }
         public int AccountTypeId { get; set; }
         public System.DateTime PaymentDate { get; set; }
         public System.DateTime ExpirationDate { get; set; }
-        public string IdempotencyKey { get; set; }
-        public string Nonce { get; set; }
     
         public virtual User User { get; set; }
     }

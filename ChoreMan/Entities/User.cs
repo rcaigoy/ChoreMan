@@ -17,9 +17,9 @@ namespace ChoreMan.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.ChoreLists = new HashSet<ChoreList>();
-            this.Sessions = new HashSet<Session>();
             this.AccountPayments = new HashSet<AccountPayment>();
+            this.Sessions = new HashSet<Session>();
+            this.ChoreLists = new HashSet<ChoreList>();
         }
     
         public int Id { get; set; }
@@ -35,12 +35,12 @@ namespace ChoreMan.Entities
         public int NumberOfLoginAttempts { get; set; }
         public int AccountTypeId { get; set; }
     
-        public virtual AccountType AccountType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ChoreList> ChoreLists { get; set; }
+        public virtual ICollection<AccountPayment> AccountPayments { get; set; }
+        public virtual AccountType AccountType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AccountPayment> AccountPayments { get; set; }
+        public virtual ICollection<ChoreList> ChoreLists { get; set; }
     }
 }

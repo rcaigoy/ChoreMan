@@ -21,14 +21,7 @@
         {
             <tr>
                 <td><a href="@Url.Action("EditChoreList", "Chores")?Id=@ChoreList.Id">@ChoreList.Name</a></td>
-                @if(ChoreList.IsActive)
-                {
-                    <td>Active</td>
-                }
-                else
-                {
-                    <td>Not Active</td>
-                }
+                <td>@ChoreList.ChoreListStatusName</td>
             </tr>
         }
     </table>

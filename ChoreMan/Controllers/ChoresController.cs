@@ -55,6 +55,12 @@ namespace ChoreMan.Controllers
 
             _ChoreList ChoreList = new _ChoreList(ChoreRepository.GetChoreList(Id));
 
+            if (ChoreList.StatusId == 2)
+            {
+                List<string> Reasons = ChoreRepository.GetInActiveReasons(Id);
+                ViewBag.InActiveReasons = Reasons;
+            }
+
             ViewBag.User = User;
             ViewBag.ChoreList = ChoreList;
 

@@ -27,16 +27,17 @@ namespace ChoreMan.Entities
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AccountPayment> AccountPayments { get; set; }
         public virtual DbSet<AccountType> AccountTypes { get; set; }
         public virtual DbSet<ChoreList> ChoreLists { get; set; }
+        public virtual DbSet<ChoreListStatu> ChoreListStatus { get; set; }
         public virtual DbSet<Chore> Chores { get; set; }
         public virtual DbSet<ChoreUser> ChoreUsers { get; set; }
         public virtual DbSet<IntervalType> IntervalTypes { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<RotationInterval> RotationIntervals { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Message> Messages { get; set; }
-        public virtual DbSet<AccountPayment> AccountPayments { get; set; }
     
         public virtual int Authenticate(string pUsername, string pPassword, ObjectParameter responseMessage)
         {

@@ -103,12 +103,18 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [HttpOptions]
         [Route("api/updatechorelist")]
-        public HttpResponseMessage UpdateChoreList(int Id, string ChoreListValues)
+        public HttpResponseMessage UpdateChoreList(string AuthToken, int ChoreListId, string Name, int StatusId)
         {
             try
             {
-                ChoreList ChoreListObject = JsonConvert.DeserializeObject<ChoreList>(ChoreListValues);
-                return OKResponse(new _ChoreList(ChoreRepository.UpdateChoreList(Id, ChoreListObject)));
+                ChoreList ChoreListObject = new ChoreList
+                {
+                    Id = ChoreListId,
+                    Name = Name,
+                    StatusId = StatusId
+                };
+
+                return OKResponse(new _ChoreList(ChoreRepository.UpdateChoreList(ChoreListId, ChoreListObject)));
             }
             catch (Exception ex)
             {
@@ -142,21 +148,6 @@ namespace ChoreMan.Controllers
         #endregion CHORELIST
 
         #region CHOREUSER
-
-
-        [HttpGet]
-        [Route("testnonce")]
-        public HttpResponseMessage TestNonce(string Nonce)
-        {
-            try
-            {
-                return OKResponse(Payments.Bill(Guid.NewGuid().ToString(), Nonce, 200));
-            }
-            catch (Exception ex)
-            {
-                return ErrorResponse(ex);
-            }
-        }
 
 
         //Create

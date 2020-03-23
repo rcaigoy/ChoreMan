@@ -217,6 +217,9 @@
     <Compile Include="Entities\ChoreList.cs">
       <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ChoreListStatu.cs">
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ChoremanModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

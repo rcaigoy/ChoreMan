@@ -25,15 +25,15 @@ namespace ChoreMan.Entities
         public int Id { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsSuspended { get; set; }
+        public int StatusId { get; set; }
     
-        public virtual User User { get; set; }
+        public virtual ChoreListStatu ChoreListStatu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Chore> Chores { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChoreUser> ChoreUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RotationInterval> RotationIntervals { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -34,11 +34,20 @@ namespace ChoreMan.Models
         {
             try
             {
+                TinyMapper.Bind<ChoreList, _ChoreList>(config =>
+                {
+                    config.Bind(x => x.ChoreListStatu.ChoreListStatusName, y => y.ChoreListStatusName);
+                });
+
                 TinyMapper.Bind<User, _User>(config =>
                 {
                     config.Bind(x => x.ChoreLists, y => y.ChoreLists);
+                    
                 });
                 TinyMapper.Map<User, _User>(Value, this);
+
+                //only get non-deleted chore lists
+                this.ChoreLists = this.ChoreLists.Where(x => x.StatusId != 3).ToList();
 
                 this.AccountTypeName = Value.AccountType.AccountTypeName;
             }

@@ -36,7 +36,10 @@ namespace ChoreMan.Services
         {
             try
             {
+                //always start as inactive
+                Value.StatusId = 2;
                 Value = db.ChoreLists.Add(Value);
+
                 db.SaveChanges();
 
                 return GetChoreList(Value.Id);
@@ -88,27 +91,153 @@ namespace ChoreMan.Services
             {
                 var OldChoreList = db.ChoreLists.SingleOrDefault(x => x.Id == Id);
 
-                //iterate through all properties
-                //except Id
-                foreach (var property in NewChoreList
-                                            .GetType()
-                                            .GetProperties()
-                                            .Where(x => x.Name != "Id"))
-                {
-                    //get the value of the iterated property
-                    var value = property.GetValue(NewChoreList);
+                OldChoreList.Name = NewChoreList.Name;
 
-                    if (value != null)
-                    {
-                        Type type = NewChoreList.GetType();
-                        PropertyInfo propertyInfo = type.GetProperty(property.Name);
-                        propertyInfo.SetValue(OldChoreList, value, null);
-                    }
+                //check if chorelist is in ruleset
+                if (NewChoreList.StatusId == 1)
+                {
+                    if (ChoreListIsValid(Id))
+                        OldChoreList.StatusId = NewChoreList.StatusId;
                 }
+                else
+                {
+                    OldChoreList.StatusId = NewChoreList.StatusId;
+                }
+
+
 
                 db.SaveChanges();
 
                 return OldChoreList;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        public bool ChoreListIsValid(int ChoreListId)
+        {
+            try
+            {
+                var ChoreList = db.ChoreLists.FirstOrDefault(x => x.Id == ChoreListId);
+
+                if (ChoreList == null)
+                    return false;
+
+                //get User from ChoreList
+                var User = ChoreList.User;
+
+                //if unlimited program, then return true;
+                if (User.AccountTypeId == 4)
+                    return true;
+
+                int NumChoreLists = User.ChoreLists.Count(x => x.StatusId == 1);
+
+                //get number of usrs
+                int NumUsers = ChoreList.ChoreUsers.Count;
+
+                //get number of rotations
+                int NumRotations = ChoreList.RotationIntervals.Count;
+
+                //if type is 3
+                if (User.AccountTypeId == 3)
+                {
+                    if (NumUsers > 50 || NumRotations > 10 || NumChoreLists > 10)
+                        return false;
+                }
+
+                //if type is 2
+                if (User.AccountTypeId == 2)
+                {
+                    if (NumUsers > 10 || NumRotations > 3 || NumChoreLists > 3)
+                        return false;
+                }
+
+                //if type is 1
+                if (User.AccountTypeId == 1)
+                {
+                    if (NumUsers > 5 || NumRotations > 1 || NumChoreLists > 1)
+                        return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw Utility.ThrowException(ex);
+            }
+        }
+
+
+        public List<string> GetInActiveReasons(int ChoreListId)
+        {
+            try
+            {
+                List<string> to_return = new List<string>();
+
+                //get chorelist
+                var ChoreList = db.ChoreLists.FirstOrDefault(x => x.Id == ChoreListId);
+
+                //get User from ChoreList
+                var User = ChoreList.User;
+
+                int NumChoreLists = User.ChoreLists.Count(x => x.StatusId == 1);
+
+                //get number of usrs
+                int NumUsers = ChoreList.ChoreUsers.Count;
+
+                //get number of rotations
+                int NumRotations = ChoreList.RotationIntervals.Count;
+
+                //if type is 3
+                if (User.AccountTypeId == 3)
+                {
+                    if (NumUsers > 50)
+                        to_return.Add("Too many users in chore list.  Limit 50 for this account type");
+
+                    if (NumRotations > 10)
+                        to_return.Add("Too many active schedule rotations.  Limit 10 for this account type");
+
+                    if (NumChoreLists > 10)
+                        to_return.Add("Too many active chore lists.  Limit 10 for this account type");
+
+                }
+
+                //if type is 2
+                if (User.AccountTypeId == 2)
+                {
+                    if (NumUsers > 10)
+                        to_return.Add("Too many users in chore list.  Limit 10 for this account type");
+
+                    if (NumRotations > 3)
+                        to_return.Add("Too many active schedule rotations.  Limit 3 for this account type");
+
+                    if (NumChoreLists > 3)
+                        to_return.Add("Too many active chore lists.  Limit 3 for this account type");
+
+                }
+
+                //if type is 1
+                if (User.AccountTypeId == 1)
+                {
+                    if (NumUsers > 5)
+                        to_return.Add("Too many users in chore list.  Limit 5 for this account type");
+
+                    if (NumRotations > 1)
+                        to_return.Add("Too many active schedule rotations.  Limit 1 for this account type");
+
+                    if (NumChoreLists > 1)
+                        to_return.Add("Too many active chore lists.  Limit 1 for this account type");
+
+                }
+
+                //if no valid reasons
+                if (to_return.Count == 0)
+                    to_return.Add("Set InActive by User");
+                
+                return to_return;
             }
             catch (Exception ex)
             {
@@ -122,7 +251,8 @@ namespace ChoreMan.Services
             try
             {
                 var ChoreList = db.ChoreLists.SingleOrDefault(x => x.Id == Id);
-                ChoreList.IsActive = false;
+                ChoreList.StatusId = 3;
+
                 db.SaveChanges();
 
                 return ChoreList;
@@ -148,6 +278,14 @@ namespace ChoreMan.Services
 
                 //add value
                 Value = db.ChoreUsers.Add(Value);
+
+                //make chore status inactive if rules broken
+                if (!ChoreListIsValid(Value.ChoreListId))
+                {
+                    var ChoreList = db.ChoreLists.FirstOrDefault(x => x.Id == Value.ChoreListId);
+                    ChoreList.StatusId = 2;
+                }
+
                 db.SaveChanges();
 
                 return Value;

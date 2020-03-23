@@ -5,16 +5,41 @@
 
 <h2>Chore:  @ViewBag.ChoreList.Name</h2>
 
+Current Status:  @ViewBag.ChoreList.ChoreListStatusName
+
+@if (ViewBag.ChoreList.StatusId == 2)
+{
+<div>
+    <ul>
+        @foreach (var Reason in ViewBag.InActiveReasons)
+        {
+            <li>@Reason</li>
+        }
+    </ul>
+</div>
+}
+
+
+<br /><br />
+
 <div id="SaveForm">
 </div>
 <div id="ChoreListForm">
+    <input type="text" value="@ViewBag.ChoreList.Name" id="ChoreListName" />
+    <br />
+
     <label>Set Active</label>
-    <input type="checkbox" @if (ViewBag.Chorelist.IsActive) { WriteLiteral("checked"); } />
+    <input type="checkbox" @if (ViewBag.Chorelist.StatusId == 1) { WriteLiteral("checked"); } id="ChoreListCheckbox"/>
     <br />
 
     <button id="Save">Save</button>
     <button class="Cancel">Cancel</button>
     <br />
+
+    <br />
+
+    <button id="Delete">Delete Chore List</button>
+    <br ? />
 
     <br />
 
@@ -204,10 +229,60 @@
 
     <script>
         $(document).ready(function () {
+            //save
+            $('#Save').on('click', function () {
+                let StatusId = 2;
+                if (ChoreListCheckbox.checked) {
+                    StatusId = 1;
+                }
 
+                $.ajax({
+                    url: '@Url.Action("UpdateChoreList", "API")'
+                        + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                        + '&ChoreListId=' + '@ViewBag.ChoreList.Id'
+                        + '&Name=' + ChoreListName.value
+                        + '&StatusId=' + StatusId,
+                    type: 'POST',
+                    success: function (data) {
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        alert('Error');
+                    }
+                });//end $.ajax({
+            });//end $('#Save').on('click', function () {
+
+
+            //cancel
             $('.Cancel').on('click', function () {
                 window.location.reload();
             });//end $('.Cancel').on('click', function () {
+
+
+            //delete
+            $('#Delete').on('click', function () {
+                let confirm = window.confirm('Are you sure you want to delete this project?');
+                if (confirm) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteChoreList", "API")'
+                            + '?AuthToken=' + '@ViewBag.User.AuthToken'
+                            + '&Id=' + '@ViewBag.Chorelist.Id',
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.href = '@Url.Action("Index", "Home")';
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            alert('Error');
+                        }
+
+                    });//end $.ajax({
+
+                }//end if (confirm){
+
+            });//end $('#Delete').on('click', function () {
+
 
             //Add or Edit User Popup button
             $('#AddUser, .EditUser').on('click', function () {
