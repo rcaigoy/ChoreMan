@@ -20,12 +20,6 @@ namespace ChoreMan.Controllers
 {
     public class SMSController : TwilioController
     {
-        // GET: SMS
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpPost]
         public ActionResult ReceiveSMS()
         {

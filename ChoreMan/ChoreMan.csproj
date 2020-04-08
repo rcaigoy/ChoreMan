@@ -211,6 +211,12 @@
     <Compile Include="Entities\AccountType.cs">
       <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\AppCall.cs">
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\AppCallType.cs">
+      <DependentUpon>ChoremanModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Chore.cs">
       <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
@@ -220,6 +226,7 @@
     <Compile Include="Entities\ChoreListStatu.cs">
       <DependentUpon>ChoremanModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ChoremanEntities.cs" />
     <Compile Include="Entities\ChoremanModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

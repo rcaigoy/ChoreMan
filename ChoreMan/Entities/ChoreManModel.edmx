@@ -30,6 +30,22 @@
           <Property Name="ChoreListLimit" Type="int" />
           <Property Name="RotationLimit" Type="int" />
         </EntityType>
+        <EntityType Name="AppCalls">
+          <Key>
+            <PropertyRef Name="AppCallId" />
+          </Key>
+          <Property Name="AppCallId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AppCallTypeId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AppCallTypes">
+          <Key>
+            <PropertyRef Name="AppCallTypeId" />
+          </Key>
+          <Property Name="AppCallTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AppCallType" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
         <EntityType Name="ChoreLists">
           <Key>
             <PropertyRef Name="Id" />
@@ -134,7 +150,7 @@
           <Property Name="NumberOfLoginAttempts" Type="int" Nullable="false" />
           <Property Name="AccountTypeId" Type="int" Nullable="false" />
           <Property Name="CanEditMessages" Type="bit" Nullable="false" />
-          <Property Name="DateRegistered" Type="datetime" Nullable="false" />
+          <Property Name="DateRegistered" Type="datetime" />
         </EntityType>
         <Association Name="FK_AccountPayments_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
@@ -145,6 +161,18 @@
             </Principal>
             <Dependent Role="AccountPayments">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AppCalls_AppCallTypes">
+          <End Role="AppCallTypes" Type="Self.AppCallTypes" Multiplicity="1" />
+          <End Role="AppCalls" Type="Self.AppCalls" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AppCallTypes">
+              <PropertyRef Name="AppCallTypeId" />
+            </Principal>
+            <Dependent Role="AppCalls">
+              <PropertyRef Name="AppCallTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -302,6 +330,8 @@
         <EntityContainer Name="ChoremanModelStoreContainer">
           <EntitySet Name="AccountPayments" EntityType="Self.AccountPayments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AccountTypes" EntityType="Self.AccountTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AppCalls" EntityType="Self.AppCalls" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AppCallTypes" EntityType="Self.AppCallTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChoreLists" EntityType="Self.ChoreLists" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChoreListStatus" EntityType="Self.ChoreListStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
@@ -314,6 +344,10 @@
           <AssociationSet Name="FK_AccountPayments_Users" Association="Self.FK_AccountPayments_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="AccountPayments" EntitySet="AccountPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AppCalls_AppCallTypes" Association="Self.FK_AppCalls_AppCallTypes">
+            <End Role="AppCallTypes" EntitySet="AppCallTypes" />
+            <End Role="AppCalls" EntitySet="AppCalls" />
           </AssociationSet>
           <AssociationSet Name="FK_ChoreLists_ChoreListStatus" Association="Self.FK_ChoreLists_ChoreListStatus">
             <End Role="ChoreListStatus" EntitySet="ChoreListStatus" />
@@ -442,6 +476,12 @@
           <AssociationSet Name="FK_ChoreLists_Users1" Association="ChoremanModel.FK_ChoreLists_Users1">
             <End Role="User" EntitySet="Users" />
             <End Role="ChoreList" EntitySet="ChoreLists" />
+          </AssociationSet>
+          <EntitySet Name="AppCalls" EntityType="ChoremanModel.AppCall" />
+          <EntitySet Name="AppCallTypes" EntityType="ChoremanModel.AppCallType" />
+          <AssociationSet Name="FK_AppCalls_AppCallTypes" Association="ChoremanModel.FK_AppCalls_AppCallTypes">
+            <End Role="AppCallType" EntitySet="AppCallTypes" />
+            <End Role="AppCall" EntitySet="AppCalls" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AccountPayment">
@@ -597,7 +637,7 @@
           <NavigationProperty Name="Sessions" Relationship="ChoremanModel.FK_Session_Users" FromRole="User" ToRole="Session" />
           <NavigationProperty Name="ChoreLists" Relationship="ChoremanModel.FK_ChoreLists_Users1" FromRole="User" ToRole="ChoreList" />
           <Property Name="CanEditMessages" Type="Boolean" Nullable="false" />
-          <Property Name="DateRegistered" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateRegistered" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_AccountPayments_Users">
           <End Type="ChoremanModel.User" Role="User" Multiplicity="1" />
@@ -740,6 +780,36 @@
             </Principal>
             <Dependent Role="ChoreList">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AppCall">
+          <Key>
+            <PropertyRef Name="AppCallId" />
+          </Key>
+          <Property Name="AppCallId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AppCallTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AppCallType" Relationship="ChoremanModel.FK_AppCalls_AppCallTypes" FromRole="AppCall" ToRole="AppCallType" />
+        </EntityType>
+        <EntityType Name="AppCallType">
+          <Key>
+            <PropertyRef Name="AppCallTypeId" />
+          </Key>
+          <Property Name="AppCallTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AppCallType1" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AppCalls" Relationship="ChoremanModel.FK_AppCalls_AppCallTypes" FromRole="AppCallType" ToRole="AppCall" />
+        </EntityType>
+        <Association Name="FK_AppCalls_AppCallTypes">
+          <End Type="ChoremanModel.AppCallType" Role="AppCallType" Multiplicity="1" />
+          <End Type="ChoremanModel.AppCall" Role="AppCall" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AppCallType">
+              <PropertyRef Name="AppCallTypeId" />
+            </Principal>
+            <Dependent Role="AppCall">
+              <PropertyRef Name="AppCallTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -891,6 +961,24 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppCalls">
+            <EntityTypeMapping TypeName="ChoremanModel.AppCall">
+              <MappingFragment StoreEntitySet="AppCalls">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AppCallTypeId" ColumnName="AppCallTypeId" />
+                <ScalarProperty Name="AppCallId" ColumnName="AppCallId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppCallTypes">
+            <EntityTypeMapping TypeName="ChoremanModel.AppCallType">
+              <MappingFragment StoreEntitySet="AppCallTypes">
+                <ScalarProperty Name="AppCallType1" ColumnName="AppCallType" />
+                <ScalarProperty Name="AppCallTypeId" ColumnName="AppCallTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

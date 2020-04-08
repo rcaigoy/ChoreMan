@@ -28,6 +28,9 @@
         <AssociationConnector Association="ChoremanModel.FK_RotationIntervals_IntervalType" />
         <AssociationConnector Association="ChoremanModel.FK_Session_Users" />
         <AssociationConnector Association="ChoremanModel.FK_ChoreLists_Users1" />
+        <EntityTypeShape EntityType="ChoremanModel.AppCall" Width="1.5" PointX="9.625" PointY="7.875" />
+        <EntityTypeShape EntityType="ChoremanModel.AppCallType" Width="1.5" PointX="7.375" PointY="8.125" />
+        <AssociationConnector Association="ChoremanModel.FK_AppCalls_AppCallTypes" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

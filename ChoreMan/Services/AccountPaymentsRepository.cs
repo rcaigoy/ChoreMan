@@ -17,7 +17,14 @@ namespace ChoreMan.Services
         {
             try
             {
-                this.db = new ChoremanEntities();
+                if (Utility.IsTest())
+                {
+                    this.db = new ChoremanEntities();
+                }
+                else
+                {
+                    this.db = new ChoremanEntities(PrivateValues.GetConnectionString());
+                }
             }
             catch (Exception ex)
             {
@@ -28,11 +35,15 @@ namespace ChoreMan.Services
 
         public bool CheckPayments(string AppToken)
         {
+            if (AppToken != PrivateValues.AppToken)
+                throw new Exception("Unauthorized");
+
+            AppCall AppCall = new AppCall();
+            AppCall.AppCallTypeId = 4;
+            AppCall.Date = DateTime.Now;
+
             try
             {
-                if (AppToken != PrivateValues.AppToken)
-                    throw new Exception("Unauthorized");
-
                 var AccountPayments = db.AccountPayments.Where(x => x.ExpirationDate < DateTime.Today).ToList();
 
                 //get all active accounts
@@ -67,12 +78,19 @@ namespace ChoreMan.Services
                     }
                 }
 
+                AppCall.Status = "Success";
+                db.AppCalls.Add(AppCall);
+
                 db.SaveChanges();
 
                 return true;
             }
             catch (Exception ex)
             {
+                AppCall.Status = ex.Message;
+                db.AppCalls.Add(AppCall);
+                db.SaveChanges();
+
                 throw Utility.ThrowException(ex);
             }
         }

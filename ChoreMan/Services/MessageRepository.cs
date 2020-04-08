@@ -14,7 +14,14 @@ namespace ChoreMan.Services
         private ChoremanEntities db;
         public MessageRepository()
         {
-            db = new ChoremanEntities();
+            if (Utility.IsTest())
+            {
+                this.db = new ChoremanEntities();
+            }
+            else
+            {
+                this.db = new ChoremanEntities(PrivateValues.GetConnectionString());
+            }
         }
 
 
@@ -24,11 +31,14 @@ namespace ChoreMan.Services
             if (AppToken != PrivateValues.AppToken)
                 throw new Exception("Unauthorized");
 
+            AppCall AppCall = new AppCall();
+            AppCall.AppCallTypeId = 1;
+            AppCall.Date = DateTime.Now;
 
             string ErrorHelper = string.Empty;
             try
             {
-
+                //get active rotations with chore lists of active status
                 var RotationsStatic = (from Rotation in db.RotationIntervals
                                             join ChoreList in db.ChoreLists
                                             on Rotation.ChoreListId equals ChoreList.Id
@@ -41,8 +51,6 @@ namespace ChoreMan.Services
                                             select Rotation
                                             ).ToList();
 
-                //get rotations from db
-                //var RotationsStatic = db.RotationIntervals.Where(x => x.IsActive && x.StartDate > DateTime.Today);
 
                 //get all active rotations
                 foreach (var Rotation in RotationsStatic)
@@ -108,13 +116,26 @@ namespace ChoreMan.Services
 
                 //email admin if error
                 if (!string.IsNullOrEmpty(ErrorHelper))
+                {
                     EmailAdmin(ErrorHelper);
-                
+                    AppCall.Status = ErrorHelper;
+                }
+                else
+                {
+                    AppCall.Status = "Success";
+                }
+
+                db.AppCalls.Add(AppCall);
+                db.SaveChanges();
 
                 return true;
             }
             catch (Exception ex)
             {
+                AppCall.Status = ex.Message;
+                db.AppCalls.Add(AppCall);
+                db.SaveChanges();
+
                 throw Utility.ThrowException(ex);
             }
         }
@@ -165,11 +186,15 @@ namespace ChoreMan.Services
 
         public bool CheckMessageCounts(string AppToken)
         {
+            if (AppToken != PrivateValues.AppToken)
+                throw new Exception("Unauthorized");
+
+            AppCall AppCall = new AppCall();
+            AppCall.AppCallTypeId = 3;
+            AppCall.Date = DateTime.Now;
+
             try
             {
-                if (AppToken != PrivateValues.AppToken)
-                    throw new Exception("Unauthorized");
-
                 //get each active user
                 foreach (var User in db.Users.Where(x => x.IsActive))
                 {
@@ -189,12 +214,19 @@ namespace ChoreMan.Services
                         User.CanEditMessages = true;
                 }
 
+                AppCall.Status = "Success";
+                db.AppCalls.Add(AppCall);
+
                 db.SaveChanges();
 
                 return true;
             }
             catch (Exception ex)
             {
+                AppCall.Status = ex.Message;
+                db.AppCalls.Add(AppCall);
+                db.SaveChanges();
+
                 throw Utility.ThrowException(ex);
             }
         }
@@ -216,7 +248,7 @@ namespace ChoreMan.Services
                 else
                 {
                     var User = db.Users.FirstOrDefault(x => x.Id == UserId);
-                    LastResetDate = User.DateRegistered;
+                    LastResetDate = (DateTime)User.DateRegistered;
                     while(LastResetDate.AddMonths(1) > DateTime.Today)
                     {
                         LastResetDate = LastResetDate.AddMonths(1);
@@ -234,6 +266,10 @@ namespace ChoreMan.Services
 
         public bool SendEmails(string AppToken)
         {
+            AppCall AppCall = new AppCall();
+            AppCall.AppCallTypeId = 2;
+            AppCall.Date = DateTime.Now;
+
             try
             {
                 if (AppToken != PrivateValues.AppToken)
@@ -294,10 +330,18 @@ namespace ChoreMan.Services
                         db.SaveChanges();
                     }
                 }
+
+                AppCall.Status = "Success";
+                db.AppCalls.Add(AppCall);
+
                 return true;
             }
             catch (Exception ex)
             {
+                AppCall.Status = ex.Message;
+                db.AppCalls.Add(AppCall);
+                db.SaveChanges();
+
                 throw Utility.ThrowException(ex);
             }
         }

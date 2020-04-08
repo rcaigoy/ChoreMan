@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+//added internal
+using System.Configuration;
+
 namespace ChoreMan
 {
     public class Utility
     {
+        public static bool IsTest()
+        {
+            return ConfigurationManager.AppSettings["IsTest"] == "true";
+        }
+
 
         public static Exception ThrowException(Exception _ex)
         {

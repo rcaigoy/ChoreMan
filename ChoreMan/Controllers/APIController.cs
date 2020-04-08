@@ -66,6 +66,7 @@ namespace ChoreMan.Controllers
             try
             {
                 _User User = new _User(UserRepository.RefreshAuthToken(AuthToken));
+
                 ChoreList ChoreListObject = JsonConvert.DeserializeObject<ChoreList>(ChoreListValues);
 
                 //check if User Matches Id
@@ -113,6 +114,12 @@ namespace ChoreMan.Controllers
                     Name = Name,
                     StatusId = StatusId
                 };
+
+                var User = UserRepository.RefreshAuthToken(AuthToken);
+
+                //check if User Matches Id
+                if (User.Id != ChoreRepository.GetChoreList(ChoreListId).UserId)
+                    throw new Exception("Unathorized");
 
                 return OKResponse(new _ChoreList(ChoreRepository.UpdateChoreList(ChoreListId, ChoreListObject)));
             }

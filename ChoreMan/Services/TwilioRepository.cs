@@ -25,7 +25,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     //get corresponding chore user(s)
                     var ChoreUsers = db.ChoreUsers.Where(x => x.ChoreListId == ChoreListId && x.Phone == Phone);
@@ -52,7 +52,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     return db.ChoreLists.SingleOrDefault(x => x.Id == ChoreListId).Name;
                 }
@@ -68,7 +68,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     bool to_return = false;
                     //get corresponding chore user(s)
@@ -96,7 +96,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     return db.ChoreUsers.Count(x => x.Phone == Phone && x.IsPendingCancel);
                 }
@@ -112,7 +112,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     return db.ChoreUsers.Count(x => x.IsActive && x.IsVerified && x.Phone == Phone);
                 }
@@ -129,7 +129,7 @@ namespace ChoreMan.Services
             try
             {
                 bool to_return = false;
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     foreach (var ChoreUser in db.ChoreUsers.Where(x => x.IsActive && x.IsVerified && x.Phone == Phone))
                     {
@@ -153,7 +153,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     foreach (var ChoreUser in db.ChoreUsers.Where(x => x.Phone == Phone))
                     {
@@ -176,7 +176,7 @@ namespace ChoreMan.Services
             try
             {
                 List<ChoreList> to_return = new List<ChoreList>();
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     foreach (var ChoreUser in db.ChoreUsers.Where(x => x.Phone == Phone && x.IsActive && x.IsVerified))
                     {
@@ -199,7 +199,7 @@ namespace ChoreMan.Services
             try
             {
                 List<ChoreList> to_return = new List<ChoreList>();
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     foreach (var ChoreUser in db.ChoreUsers.Where(x => x.Phone == Phone && x.IsActive && !x.IsVerified))
                     {
@@ -221,7 +221,7 @@ namespace ChoreMan.Services
         {
             try
             {
-                using (var db = new ChoremanEntities())
+                using (var db = new ChoremanEntities(PrivateValues.GetConnectionString()))
                 {
                     return db.ChoreUsers.Count(x => x.Phone == Phone && x.IsActive) > 0;
                 }

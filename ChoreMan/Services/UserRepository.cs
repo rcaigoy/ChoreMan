@@ -22,7 +22,14 @@ namespace ChoreMan.Services
         {
             try
             {
-                this.db = new ChoremanEntities();
+                if (Utility.IsTest())
+                {
+                    this.db = new ChoremanEntities();
+                }
+                else
+                {
+                    this.db = new ChoremanEntities(PrivateValues.GetConnectionString());
+                }
             }
             catch (Exception ex)
             {
@@ -143,6 +150,9 @@ namespace ChoreMan.Services
             {
                 //get session
                 var session = db.Sessions.SingleOrDefault(x => x.BearerToken == AuthToken);
+
+                if (session == null)
+                    throw new Exception("Unauthorized");
 
                 if (DateTime.Now > session.ExpirationDate)
                     throw new Exception("Authorization Expired");

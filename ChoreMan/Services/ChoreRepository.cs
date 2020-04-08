@@ -16,7 +16,14 @@ namespace ChoreMan.Services
         { 
             try
             {
-                this.db = new ChoremanEntities();
+                if (Utility.IsTest())
+                {
+                    this.db = new ChoremanEntities();
+                }
+                else
+                {
+                    this.db = new ChoremanEntities(PrivateValues.GetConnectionString());
+                }
             }
             catch (Exception ex)
             {
