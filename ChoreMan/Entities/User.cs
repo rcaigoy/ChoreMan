@@ -18,8 +18,8 @@ namespace ChoreMan.Entities
         public User()
         {
             this.AccountPayments = new HashSet<AccountPayment>();
-            this.Sessions = new HashSet<Session>();
             this.ChoreLists = new HashSet<ChoreList>();
+            this.Sessions = new HashSet<Session>();
         }
     
         public int Id { get; set; }
@@ -41,8 +41,8 @@ namespace ChoreMan.Entities
         public virtual ICollection<AccountPayment> AccountPayments { get; set; }
         public virtual AccountType AccountType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Session> Sessions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChoreList> ChoreLists { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Session> Sessions { get; set; }
     }
 }

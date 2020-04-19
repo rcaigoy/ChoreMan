@@ -65,7 +65,7 @@ namespace ChoreMan.Controllers
             }
         }
 
-
+        [HttpGet]
         [HttpPost]
         [Route("app/sendnotifications")]
         public HttpResponseMessage SendNotifications(string AppToken)
@@ -94,6 +94,29 @@ namespace ChoreMan.Controllers
             {
                 return ErrorResponse(ex);
             }
+        }
+
+
+        [HttpGet]
+        [HttpPost]
+        [Route("app/test")]
+        public HttpResponseMessage Test()
+        
+        {
+            if (!Utility.IsTest())
+                return ErrorResponse(new Exception("cannot do test in production"));
+            try
+            {
+                MessageRepository.SetSchedule(PrivateValues.AppToken);
+                MessageRepository.SendEmails(PrivateValues.AppToken);
+
+                return OKResponse("Success");
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponse(ex);
+            }
+
         }
 
 

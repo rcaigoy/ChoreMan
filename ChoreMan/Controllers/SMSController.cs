@@ -65,14 +65,14 @@ namespace ChoreMan.Controllers
                             {
                                 //stop all
                                 TwilioRepository.StopVerificationAll(PhoneDBValue);
-                                MessageBody += "You are now removed from all scheduled text messages.  \n";
+                                MessageBody += "You are now removed from all scheduled text messages.  \n\n";
                             }
                             //if no pending verifications exist
                             else if (TwilioRepository.PendingStopVerificationAll(PhoneDBValue))
                             {
                                 //create warning
                                 MessageBody += "You have " + TwilioRepository.CountActiveNotifications(PhoneDBValue) + " active notifications.  \n";
-                                MessageBody += "text STOPALL again to stop receiving chore notifications.  \n";
+                                MessageBody += "text STOPALL again to stop receiving chore notifications.  \n\n";
                             }
                             //else do nothing
                         }
@@ -81,12 +81,12 @@ namespace ChoreMan.Controllers
                         {
                             if (TwilioRepository.StopUserVerification(ChoreListId, PhoneDBValue))
                             {
-                                MessageBody += "You are now removed from Chore List \"" + TwilioRepository.GetChoreListName(ChoreListId) + "\"  \n";
+                                MessageBody += "You are now removed from Chore List \"" + TwilioRepository.GetChoreListName(ChoreListId) + "\"  \n\n";
                             }
                             else
                             {
                                 //User not part of this chore list id
-                                MessageBody += "Not a valid chore list id.  \n";
+                                MessageBody += "Not a valid chore list id.  \n\n";
                             }
                         }
                     }
@@ -99,17 +99,17 @@ namespace ChoreMan.Controllers
                             //verify choreid
                             if (TwilioRepository.VerifyUser(ChoreListId, PhoneDBValue))
                             {
-                                MessageBody += "You will now receive notifications for Chore List \"" + TwilioRepository.GetChoreListName(ChoreListId) + "\"  \n";
+                                MessageBody += "You will now receive notifications for Chore List \"" + TwilioRepository.GetChoreListName(ChoreListId) + "\"  \n\n";
                             }
                         }
                     }
                     //check if body contains verify
-                    else if (ToParse.Contains("help"))
+                    else if (ToParse.Contains("?"))
                     {
                         //get list of all verified notifications
                         foreach (var ChoreList in TwilioRepository.GetVerifiedUserChoreLists(PhoneDBValue))
                         {
-                            MessageBody += "Text \"STOP" + ChoreList.Id + "\" to stop notifications for Chore List \"" + ChoreList.Name + "\"  \n";
+                            MessageBody += "Text \"STOP" + ChoreList.Id + "\" to stop notifications for Chore List \"" + ChoreList.Name + "\"  \n\n";
                         }
 
                         //get list of all nonverified notifications
@@ -119,11 +119,11 @@ namespace ChoreMan.Controllers
                         }
 
                         //text STOP to stop receiving notifications
-                        MessageBody += "Text \"STOPALL\" to stop receiving ALL notifications.  \n";
+                        MessageBody += "Text \"STOPALL\" to stop receiving ALL notifications.  \n\n";
                     }
 
                     //always send this message to users who send texts to this number.
-                    MessageBody += "You can text HELP at any time to see all options.";
+                    MessageBody += "You can text the question mark character '?' at any time to see all options.";
                 }
                 //phone not not in database.  send advertisement response
                 else

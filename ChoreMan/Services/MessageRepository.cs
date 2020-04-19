@@ -47,8 +47,8 @@ namespace ChoreMan.Services
                                                 &&
                                                 Rotation.IsActive
                                                 &&
-                                                Rotation.StartDate > DateTime.Today
-                                            select Rotation
+                                                Rotation.StartDate < DateTime.Today
+                                       select Rotation
                                             ).ToList();
 
 
@@ -282,7 +282,7 @@ namespace ChoreMan.Services
                                     join ChoreUser in db.ChoreUsers
                                     on Message.ChoreUserId equals ChoreUser.Id
                                     where
-                                        Message.DateScheduled < DateTime.Today
+                                        Message.DateScheduled < DateTime.Now
                                         &&
                                         !Message.IsComplete
                                     select new _Message
@@ -308,12 +308,13 @@ namespace ChoreMan.Services
                     try
                     {
                         //if User is currently verified
-                        if (Message.IsVerified)
+                        if (messagedb.ChoreUser.IsVerified)
                         {
                             messagedb.IsVerified = true;
                             //send message
                             messagedb.Sid = TwilioRepository.SendMessage(Message);
                             messagedb.DateSent = DateTime.Now;
+                            messagedb.IsComplete = true;
                         }
                         else
                         {

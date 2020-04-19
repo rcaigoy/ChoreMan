@@ -28,12 +28,12 @@ namespace ChoreMan.Entities
         public int StatusId { get; set; }
     
         public virtual ChoreListStatu ChoreListStatu { get; set; }
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Chore> Chores { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChoreUser> ChoreUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RotationInterval> RotationIntervals { get; set; }
-        public virtual User User { get; set; }
     }
 }

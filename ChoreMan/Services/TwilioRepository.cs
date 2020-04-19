@@ -262,7 +262,7 @@ namespace ChoreMan.Services
                 string MessageBody = "";
 
                 var TwilioMessage = MessageResource.Create(
-                    body: MessageBody,
+                    body: Message.ChoreName + ":  " + Message.ChoreDescription,
                     from: From,
                     to: To
                 );
