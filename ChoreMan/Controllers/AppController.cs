@@ -41,7 +41,10 @@ namespace ChoreMan.Controllers
         {
             try
             {
-                return OKResponse(MessageRepository.SetSchedule(AppToken));
+                if (AppToken != PrivateValues.AppToken)
+                    throw new Exception("Unauthorized");
+
+                return OKResponse(MessageRepository.SetSchedule());
             }
             catch (Exception ex)
             {
@@ -101,13 +104,12 @@ namespace ChoreMan.Controllers
         [HttpPost]
         [Route("app/test")]
         public HttpResponseMessage Test()
-        
         {
             if (!Utility.IsTest())
                 return ErrorResponse(new Exception("cannot do test in production"));
             try
             {
-                MessageRepository.SetSchedule(PrivateValues.AppToken);
+                MessageRepository.SetSchedule();
                 MessageRepository.SendEmails(PrivateValues.AppToken);
 
                 return OKResponse("Success");

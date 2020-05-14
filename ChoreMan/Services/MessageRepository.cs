@@ -26,10 +26,8 @@ namespace ChoreMan.Services
 
 
         //Decide next 24 hours which messages should be sent
-        public bool SetSchedule(string AppToken)
+        public bool SetSchedule()
         {
-            if (AppToken != PrivateValues.AppToken)
-                throw new Exception("Unauthorized");
 
             AppCall AppCall = new AppCall();
             AppCall.AppCallTypeId = 1;
@@ -158,21 +156,29 @@ namespace ChoreMan.Services
                     //set message chore (this can only be 1 or 0 in count)
                     //  if too many users, user sort order will be too high for chore
                     //  if too many chores, top users will not yet reach bottom of sort order
-                    foreach (var Chore in ChoresStatic.Where(x => x.SortOrder == ChoreUser.SortOrder))
-                    {
-                        //then create message for the chore-choreuser pair
-                        Message Message = new Message();
-                        Message.ChoreUserId = ChoreUser.Id;
-                        Message.ChoreId = Chore.Id;
-                        Message.Phone = ChoreUser.Phone;
-                        Message.Email = ChoreUser.Email;
-                        Message.DateScheduled = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, Rotation.StartDate.Hour, Rotation.StartDate.Minute, 0);
-                        Message.IsVerified = ChoreUser.IsVerified;
-                        Message.IsSent = false;
-                        Message.IsComplete = false;
+                    var Chore = ChoresStatic.FirstOrDefault(x => x.SortOrder == ChoreUser.SortOrder);
 
-                        db.Messages.Add(Message);
+                    if (Chore != null)
+                    {
+                        //if message already exists for today, then don't send
+                        if (db.Messages.Count(x => ((DateTime)x.DateSent).Date == DateTime.Today && (int)x.ChoreId == Chore.Id) == 0)
+                        {
+                            //then create message for the chore-choreuser pair
+                            Message Message = new Message();
+                            Message.ChoreUserId = ChoreUser.Id;
+                            Message.ChoreId = Chore.Id;
+                            Message.Phone = ChoreUser.Phone;
+                            Message.Email = ChoreUser.Email;
+                            Message.DateScheduled = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, Rotation.StartDate.Hour, Rotation.StartDate.Minute, 0);
+                            Message.IsVerified = ChoreUser.IsVerified;
+                            Message.IsSent = false;
+                            Message.IsComplete = false;
+
+                            db.Messages.Add(Message);
+                        }
                     }
+                    
+
                 }
 
                 db.SaveChanges();
